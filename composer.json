@@ -1,0 +1,15 @@
+{
+    "name": "art/art-chat-ai",
+    "autoload": {
+        "psr-4": {
+            "Art\\ArtChatAi\\": "classes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Артем",
+            "email": "artikus.sol@gmail.com"
+        }
+    ],
+    "require": {}
+}
