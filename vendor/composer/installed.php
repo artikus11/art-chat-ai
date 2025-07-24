@@ -3,7 +3,7 @@
         'name' => 'art/art-chat-ai',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '0dc52574bd39fd907aaaf7f60cfd12136e37a9eb',
+        'reference' => '234870eebeb4c2461140d2ce8ab39dd643a52ffc',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'art/art-chat-ai' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '0dc52574bd39fd907aaaf7f60cfd12136e37a9eb',
+            'reference' => '234870eebeb4c2461140d2ce8ab39dd643a52ffc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

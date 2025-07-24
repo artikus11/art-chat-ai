@@ -6,9 +6,12 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Art\\ChatAi\\Enqueue' => $baseDir . '/src/php/Enqueue.php',
+    'Art\\ChatAi\\Frontend\\View' => $baseDir . '/src/php/Frontend/View.php',
+    'Art\\ChatAi\\Helpers\\Helper' => $baseDir . '/src/php/Helpers/Helper.php',
+    'Art\\ChatAi\\Helpers\\Templater' => $baseDir . '/src/php/Helpers/Templater.php',
+    'Art\\ChatAi\\Helpers\\Utils' => $baseDir . '/src/php/Helpers/Utils.php',
     'Art\\ChatAi\\Main' => $baseDir . '/src/php/Main.php',
-    'Art\\ChatAi\\Templater' => $baseDir . '/src/php/Templater.php',
     'Art\\ChatAi\\Traits\\SingletonTrait' => $baseDir . '/src/php/Traits/SingletonTrait.php',
-    'Art\\ChatAi\\Utils' => $baseDir . '/src/php/Utils.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );

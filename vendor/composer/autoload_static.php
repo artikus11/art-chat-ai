@@ -21,10 +21,13 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
     );
 
     public static $classMap = array (
+        'Art\\ChatAi\\Enqueue' => __DIR__ . '/../..' . '/src/php/Enqueue.php',
+        'Art\\ChatAi\\Frontend\\View' => __DIR__ . '/../..' . '/src/php/Frontend/View.php',
+        'Art\\ChatAi\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/php/Helpers/Helper.php',
+        'Art\\ChatAi\\Helpers\\Templater' => __DIR__ . '/../..' . '/src/php/Helpers/Templater.php',
+        'Art\\ChatAi\\Helpers\\Utils' => __DIR__ . '/../..' . '/src/php/Helpers/Utils.php',
         'Art\\ChatAi\\Main' => __DIR__ . '/../..' . '/src/php/Main.php',
-        'Art\\ChatAi\\Templater' => __DIR__ . '/../..' . '/src/php/Templater.php',
         'Art\\ChatAi\\Traits\\SingletonTrait' => __DIR__ . '/../..' . '/src/php/Traits/SingletonTrait.php',
-        'Art\\ChatAi\\Utils' => __DIR__ . '/../..' . '/src/php/Utils.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
