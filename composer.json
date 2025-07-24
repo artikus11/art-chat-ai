@@ -2,7 +2,7 @@
     "name": "art/art-chat-ai",
     "autoload": {
         "psr-4": {
-            "Art\\ArtChatAi\\": "classes/"
+            "Art\\ChatAi\\": "src/php/"
         }
     },
     "authors": [

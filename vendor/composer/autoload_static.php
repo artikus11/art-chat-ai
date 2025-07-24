@@ -9,18 +9,22 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
     public static $prefixLengthsPsr4 = array (
         'A' => 
         array (
-            'Art\\ArtChatAi\\' => 14,
+            'Art\\ChatAi\\' => 11,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Art\\ArtChatAi\\' => 
+        'Art\\ChatAi\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/classes',
+            0 => __DIR__ . '/../..' . '/src/php',
         ),
     );
 
     public static $classMap = array (
+        'Art\\ChatAi\\Main' => __DIR__ . '/../..' . '/src/php/Main.php',
+        'Art\\ChatAi\\Templater' => __DIR__ . '/../..' . '/src/php/Templater.php',
+        'Art\\ChatAi\\Traits\\SingletonTrait' => __DIR__ . '/../..' . '/src/php/Traits/SingletonTrait.php',
+        'Art\\ChatAi\\Utils' => __DIR__ . '/../..' . '/src/php/Utils.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 

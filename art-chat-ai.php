@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Art Chat Ai
  * Plugin URI: https://wpruse.ru/my-plugins/art-feedback-button/
- * Text Domain: art-feedback-button
+ * Text Domain: art-chat-ai
  * Domain Path: /languages
  * Description: Плагин чата подбора товаров
  * Version: 1.0.0
@@ -20,11 +20,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const ACA_PLUGIN_DIR = __DIR__;
+const ACA_PLUGIN_DIR   = __DIR__;
 const ACA_PLUGIN_AFILE = __FILE__;
-define( 'ACA_PLUGIN_URI', plugin_dir_url( __FILE__ ) );
+
+const ACA_PLUGIN_VER    = '1.0.0';
+const ACA_PLUGIN_NAME   = 'Art Chat Ai';
+const ACA_PLUGIN_SLUG   = 'art-chat-ai';
+const ACA_PLUGIN_PREFIX = 'acai';
+
+define( 'ACA_PLUGIN_URI', untrailingslashit( plugin_dir_url( ACA_PLUGIN_AFILE ) ) );
 define( 'ACA_PLUGIN_FILE', plugin_basename( __FILE__ ) );
-const ACA_PLUGIN_VER = '1.0.0';
 
 require ACA_PLUGIN_DIR . '/vendor/autoload.php';
+
+if ( ! function_exists( 'acai' ) ) {
+	/**
+	 * @return object Main class object.
+	 * @since 1.0.0
+	 */
+	function acai(): object {
+
+		return \Art\ChatAi\Main::instance();
+	}
+}
+
+acai();
 
