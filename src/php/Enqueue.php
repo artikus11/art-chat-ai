@@ -17,8 +17,22 @@ class Enqueue {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ], 100 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'public_scripts' ], 100 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'public_style' ], 100 );
 	}
 
+	public  function public_style() {
+
+		wp_enqueue_style(
+			$this->get_prefix() . '-public-style',
+			sprintf(
+				'%s/css/public-style%s.css',
+				$this->get_url(),
+				$this->get_suffix()
+			),
+			[],
+			$this->get_version(),
+		);
+	}
 
 	public function public_scripts(): void {
 
@@ -58,7 +72,7 @@ class Enqueue {
 
 	public function get_url(): string {
 
-		return $this->main->get_utils()->get_plugin_url();
+		return $this->main->get_utils()->get_plugin_url() . '/assets';
 	}
 
 

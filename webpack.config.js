@@ -21,7 +21,6 @@ const filename = ext => isProduction ? ext + '/[name].min.' + ext : ext + '/[nam
 const svgFiles = glob.sync( path.resolve( __dirname, 'src/icons/*.svg' ) );
 const spriteSvgEntry = svgFiles.length > 0 ? svgFiles : undefined;
 
-
 class RemoveSvgSpriteJsPlugin {
 	apply( compiler ) {
 		compiler.hooks.afterEmit.tap( 'RemoveSvgSpriteJsPlugin', () => {
@@ -37,7 +36,6 @@ class RemoveSvgSpriteJsPlugin {
 		} );
 	}
 }
-
 
 const getBlockEntries = () => {
 	const entries = {};
@@ -65,7 +63,9 @@ module.exports = {
 	devtool: ! isProduction ? 'source-map' : false,
 	//devtool:      ! isProduction ? false : false,
 	entry: {
-		"public-script":  path.resolve( process.cwd(), 'src/js', 'public-script.js' ),
+		main: path.resolve( process.cwd(), 'src/js', 'main.js' ),
+		"public-script": path.resolve( process.cwd(), 'src/js', 'public-script.js' ),
+		"public-style": path.resolve( process.cwd(), 'src/scss', 'public-style.scss' ),
 	},
 	output: {
 		filename: filename( 'js' ),
@@ -139,23 +139,28 @@ module.exports = {
 						},
 					},
 					{
-						loader: 'postcss-loader',
-						options: {
-							sourceMap: ! isProduction,
-						},
-					},
-					{
 						loader: 'sass-loader',
 						options: {
 							sourceMap: ! isProduction,
 							implementation: require( 'sass' ),
 							sassOptions: {
 								includePaths: [
-									path.resolve(__dirname, 'node_modules'),
+									path.resolve( __dirname, 'node_modules' ),
 								],
 							},
 						},
 					},
+					{
+						loader: 'postcss-loader',
+						options: {
+							sourceMap: !isProduction,
+							postcssOptions: {
+								plugins: [
+									require('autoprefixer')
+								]
+							}
+						},
+					}
 				],
 			},
 			{
