@@ -2,6 +2,7 @@
 
 namespace Art\ChatAi;
 
+use Art\ChatAi\Admin\Settings;
 use Art\ChatAi\Frontend\View;
 use Art\ChatAi\Helpers\Helper;
 use Art\ChatAi\Helpers\Templater;
@@ -35,6 +36,7 @@ class Main {
 		$this->helper    = new Helper();
 
 		( new Enqueue( $this ) )->init_hooks();
+		( new Settings( $this ) )->init_hooks();
 		( new View( $this ) )->init_hooks();
 	}
 

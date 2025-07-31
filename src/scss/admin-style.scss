@@ -1,0 +1,17 @@
+@use "media-mixin";
+
+.acai {
+  &-settings {
+    max-width: media-mixin.rem(700);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  &-progress-bar {
+    width: 100%;
+  }
+
+  &-field {
+    margin-bottom: media-mixin.rem(16);
+  }
+}

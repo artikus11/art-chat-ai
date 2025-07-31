@@ -1,12 +1,13 @@
 const path = require( 'path' );
 const glob = require( 'glob' );
 const fs = require( 'fs' );
-const defaultConfig = require( "@wordpress/scripts/config/webpack.config" );
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const CssMinimizerPlugin = require( "css-minimizer-webpack-plugin" );
+const CssMinimizerPlugin = require( 'css-minimizer-webpack-plugin' );
 const { hasBabelConfig } = require( '@wordpress/scripts/utils' );
 const TerserPlugin = require( 'terser-webpack-plugin' );
 const SpriteLoaderPlugin = require( 'svg-sprite-loader/plugin' );
+const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
 
 const UnminifiedWebpackPlugin = require( 'unminified-webpack-plugin' );
 const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
@@ -64,30 +65,31 @@ module.exports = {
 	//devtool:      ! isProduction ? false : false,
 	entry: {
 		main: path.resolve( process.cwd(), 'src/js', 'main.js' ),
-		"public-script": path.resolve( process.cwd(), 'src/js', 'public-script.js' ),
-		"public-style": path.resolve( process.cwd(), 'src/scss', 'public-style.scss' ),
+		settings: path.resolve( process.cwd(), 'src/js', 'settings.js' ),
+		'settings-style': path.resolve( process.cwd(), 'src/scss', 'admin-style.scss' ),
+		'public-script': path.resolve( process.cwd(), 'src/js', 'public-script.js' ),
+		'public-style': path.resolve( process.cwd(), 'src/scss', 'public-style.scss' ),
 	},
 	output: {
 		filename: filename( 'js' ),
 		path: BUILD_DIR,
 		clean: true,
-		chunkFilename: '[name].js'
 	},
 	optimization: {
 		splitChunks: {
 			cacheGroups: {
-				default: false, // Отключаем дефолтное разделение
-				vendors: false, // Отключаем разделение vendor-кода
+				default: false,
+				vendors: false,
 			},
 		},
-		runtimeChunk: false, // Отключаем runtime-чанк
+		runtimeChunk: false,
 		minimize: true,
 		minimizer: [
 			new CssMinimizerPlugin( {
 				minimizerOptions: {
 					preset: [
-						"default",
-						{ "discardComments": { "removeAll": true } }
+						'default',
+						{ 'discardComments': { 'removeAll': true } }
 					]
 				},
 			} ),
@@ -123,7 +125,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/i,
-				use: [ "style-loader", "css-loader" ],
+				use: [ 'style-loader', 'css-loader' ],
 			},
 			{
 				test: /\.s[ac]ss$/i,
@@ -153,10 +155,10 @@ module.exports = {
 					{
 						loader: 'postcss-loader',
 						options: {
-							sourceMap: !isProduction,
+							sourceMap: ! isProduction,
 							postcssOptions: {
 								plugins: [
-									require('autoprefixer')
+									require( 'autoprefixer' )
 								]
 							}
 						},
@@ -172,7 +174,7 @@ module.exports = {
 				],
 				type: 'asset/resource',
 				generator: {
-					filename: "images/[name][ext]",
+					filename: 'images/[name][ext]',
 				},
 			},
 			{
@@ -204,23 +206,36 @@ module.exports = {
 				],
 				type: 'asset/resource',
 				generator: {
-					filename: "fonts/[name][ext]",
+					filename: 'fonts/[name][ext]',
 				},
 			},
 		],
 	},
 	plugins: [
-		new RemoveEmptyScriptsPlugin(),
+		new DependencyExtractionWebpackPlugin( {
+			injectPolyfill: true,
+
+			shouldOutputAsset: ( entryName ) => {
+				return entryName === 'settings';
+			},
+
+			inject: ( entryName ) => {
+				return entryName === 'settings';
+			},
+		} ),
+		new UnminifiedWebpackPlugin( {
+			exclude: [ /sprite-svg/ ],
+		} ),
+
 		new MiniCssExtractPlugin( {
 			filename: filename( 'css' ),
 		} ),
 		new SpriteLoaderPlugin( {
 			plainSprite: true,
 		} ),
-		new UnminifiedWebpackPlugin( {
-			exclude: [ /sprite-svg/ ],
-		} ),
+		new RemoveEmptyScriptsPlugin(),
 		new RemoveSvgSpriteJsPlugin(),
+
 	],
 
 	externals: {

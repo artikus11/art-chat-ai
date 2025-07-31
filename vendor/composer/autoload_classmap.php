@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Art\\ChatAi\\Admin\\Settings' => $baseDir . '/src/php/Admin/Settings.php',
     'Art\\ChatAi\\Enqueue' => $baseDir . '/src/php/Enqueue.php',
     'Art\\ChatAi\\Frontend\\View' => $baseDir . '/src/php/Frontend/View.php',
     'Art\\ChatAi\\Helpers\\Helper' => $baseDir . '/src/php/Helpers/Helper.php',

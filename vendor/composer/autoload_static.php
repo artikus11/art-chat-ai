@@ -21,6 +21,7 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
     );
 
     public static $classMap = array (
+        'Art\\ChatAi\\Admin\\Settings' => __DIR__ . '/../..' . '/src/php/Admin/Settings.php',
         'Art\\ChatAi\\Enqueue' => __DIR__ . '/../..' . '/src/php/Enqueue.php',
         'Art\\ChatAi\\Frontend\\View' => __DIR__ . '/../..' . '/src/php/Frontend/View.php',
         'Art\\ChatAi\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/php/Helpers/Helper.php',

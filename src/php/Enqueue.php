@@ -2,6 +2,8 @@
 
 namespace Art\ChatAi;
 
+use Art\ChatAi\Admin\Settings;
+
 class Enqueue {
 
 	protected ?Main $main;
@@ -20,7 +22,8 @@ class Enqueue {
 		add_action( 'wp_enqueue_scripts', [ $this, 'public_style' ], 100 );
 	}
 
-	public  function public_style() {
+
+	public function public_style() {
 
 		wp_enqueue_style(
 			$this->get_prefix() . '-public-style',
@@ -33,6 +36,7 @@ class Enqueue {
 			$this->get_version(),
 		);
 	}
+
 
 	public function public_scripts(): void {
 
@@ -61,7 +65,58 @@ class Enqueue {
 	}
 
 
-	public function admin_scripts(): void {}
+	public function admin_scripts( $hook_suffix ): void {
+
+
+		if ( $hook_suffix !== 'settings_page_' . $this->get_prefix() . '-settings' ) {
+			return;
+		}
+
+		$asset = include $this->get_path() . '/js/settings.min.asset.php';
+
+		wp_enqueue_script(
+			$this->get_prefix() . '-settings-script',
+			sprintf(
+				'%s/js/settings%s.js',
+				$this->get_url(),
+				$this->get_suffix()
+			),
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
+
+		// Получаем экземпляр Settings
+		$settings_instance = new Settings( $this->main ); // или через DI
+		wp_localize_script(
+			$this->get_prefix() . '-settings-script',
+			'ChatbotSettings',
+			[
+				'defaults'   => Settings::get_defaults(),
+				'current'    => $settings_instance->get(), // ← вызываем метод экземпляра
+				'optionName' => $settings_instance->get_option_name(),
+				'version' => $this->main->get_utils()->get_plugin_version(),
+				'rest'       => [
+					'apiRoot' => esc_url_raw( rest_url() ),
+					'nonce'   => wp_create_nonce( 'wp_rest' ),
+				],
+			]
+		);
+
+		wp_enqueue_style( 'wp-components' );
+
+		// Стили (если есть)
+		wp_enqueue_style(
+			$this->get_prefix() . '-settings-style',
+			sprintf(
+				'%s/css/settings-style%s.css',
+				$this->get_url(),
+				$this->get_suffix()
+			),
+			[],
+			$asset['version']
+		);
+	}
 
 
 	public function get_version(): string {
@@ -73,6 +128,12 @@ class Enqueue {
 	public function get_url(): string {
 
 		return $this->main->get_utils()->get_plugin_url() . '/assets';
+	}
+
+
+	public function get_path(): string {
+
+		return $this->main->get_utils()->get_plugin_path() . '/assets';
 	}
 
 
