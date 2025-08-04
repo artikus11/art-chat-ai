@@ -4,13 +4,13 @@ import {
 	Panel,
 	PanelBody,
 	PanelRow,
-	ProgressBar,
 	Snackbar
 } from '@wordpress/components';
 import ApiTab from '../Tabs/ApiTab';
 import AppearanceTab from '../Tabs/AppearanceTab';
-import SaveButton from '../Controls/SaveButton';
+import SaveButton from '../Buttons/SaveButton';
 import SettingsTabPanel from '../Tabs/TabPanel';
+import SkeletonLoader from '../Skeleton/SkeletonLoader';
 
 const SettingsApp = observer( () => {
 	const { settingsStore, uiStore } = useStores();
@@ -18,7 +18,7 @@ const SettingsApp = observer( () => {
 	const { isLoading, isSaving, handleSettingsSave, notices } = uiStore;
 
 	if ( ! isInitialized ) {
-		return <ProgressBar className="acai-progress-bar"/>;
+		return <SkeletonLoader/>
 	}
 
 	return (

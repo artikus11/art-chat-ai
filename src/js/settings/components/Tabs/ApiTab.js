@@ -2,7 +2,7 @@ import { PanelBody, PanelRow } from '@wordpress/components';
 import { observer } from 'mobx-react-lite';
 import TextInput from '../Controls/TextInput';
 import TextAreaInput from '../Controls/TextAreaInput';
-import SyncButton from '../Controls/SyncButton';
+import SyncButton from '../Buttons/SyncButton';
 import { useStores } from '../../stores/RootStoreContext';
 
 const ApiTab = observer( () => {
