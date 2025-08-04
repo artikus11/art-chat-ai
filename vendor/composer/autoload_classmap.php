@@ -7,12 +7,19 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Art\\ChatAi\\Admin\\Settings' => $baseDir . '/src/php/Admin/Settings.php',
+    'Art\\ChatAi\\Api\\Client' => $baseDir . '/src/php/Api/Client.php',
+    'Art\\ChatAi\\Api\\Operation' => $baseDir . '/src/php/Api/Operation.php',
     'Art\\ChatAi\\Enqueue' => $baseDir . '/src/php/Enqueue.php',
     'Art\\ChatAi\\Frontend\\View' => $baseDir . '/src/php/Frontend/View.php',
     'Art\\ChatAi\\Helpers\\Helper' => $baseDir . '/src/php/Helpers/Helper.php',
     'Art\\ChatAi\\Helpers\\Templater' => $baseDir . '/src/php/Helpers/Templater.php',
     'Art\\ChatAi\\Helpers\\Utils' => $baseDir . '/src/php/Helpers/Utils.php',
     'Art\\ChatAi\\Main' => $baseDir . '/src/php/Main.php',
+    'Art\\ChatAi\\Rest\\Admin\\Bootstrap' => $baseDir . '/src/php/Rest/Admin/Bootstrap.php',
+    'Art\\ChatAi\\Rest\\Admin\\PingOperation' => $baseDir . '/src/php/Rest/Admin/PingOperation.php',
+    'Art\\ChatAi\\Rest\\Admin\\SyncOperation' => $baseDir . '/src/php/Rest/Admin/SyncOperation.php',
+    'Art\\ChatAi\\Rest\\Bootstrapper' => $baseDir . '/src/php/Rest/Bootstrapper.php',
+    'Art\\ChatAi\\Rest\\Router' => $baseDir . '/src/php/Rest/Router.php',
     'Art\\ChatAi\\Traits\\SingletonTrait' => $baseDir . '/src/php/Traits/SingletonTrait.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );

@@ -2,13 +2,33 @@
 
 .acai {
   &-settings {
-    max-width: media-mixin.rem(700);
+    max-width: media-mixin.rem(900);
     margin: 0 auto;
     position: relative;
   }
 
   &-progress-bar {
     width: 100%;
+  }
+
+  &-snackbar{
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: 1000000;
+    max-width: calc(100vw - 32px);
+
+    &--success {
+      background: #4caf50 !important;
+    }
+
+    &--error {
+      background: #f44336 !important;
+    }
+
+    &--warning {
+      background: #ff9800 !important;
+    }
   }
 
   &-field {

@@ -1,8 +1,8 @@
-import { SlotFillProvider, Slot, SnackbarList } from '@wordpress/components';
-import SettingsStore from './settings/state/SettingsStore';
-import SettingsApp from './settings/components/Layout/App';
-import domReady from '@wordpress/dom-ready';
+import { SlotFillProvider } from '@wordpress/components';
 import { createRoot } from '@wordpress/element';
+import { RootStoreProvider } from './settings/stores/RootStoreContext';
+import SettingsApp from './settings/components/Layout/SettingsApp';
+import domReady from '@wordpress/dom-ready';
 
 domReady( () => {
 	const root = createRoot(
@@ -15,19 +15,9 @@ domReady( () => {
 
 	root.render(
 		<SlotFillProvider>
-			<SettingsStore>
-				{ ( store ) => (
-					<>
-						<SettingsApp
-							store={ store }
-							activeTab={ store.state.activeTab || 'api' }
-							onTabChange={ ( tab ) => store.setState( { activeTab: tab } ) }
-						/>
-
-						<Slot name="Snackbar"></Slot>
-					</>
-				) }
-			</SettingsStore>
+			<RootStoreProvider>
+				<SettingsApp/>
+			</RootStoreProvider>
 		</SlotFillProvider>
 	);
 } );

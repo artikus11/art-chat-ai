@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { Text } from '@wordpress/components';
+import { Text } from '@wordpress/components/build-types/text';
+
 
 const Badge = ({ children, variant = 'default', style }) => {
 	const colors = {

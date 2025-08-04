@@ -2,7 +2,10 @@
 
 namespace Art\ChatAi\Admin;
 
+use Art\ChatAi\Api\Client;
 use Art\ChatAi\Main;
+use Art\ChatAi\Rest\Admin\Bootstrap;
+use WP_REST_Response;
 
 class Settings {
 
@@ -33,6 +36,8 @@ class Settings {
 
 		add_action( 'admin_menu', [ $this, 'register_menu_page' ] );
 		add_action( 'rest_api_init', [ $this, 'register_settings' ] );
+
+		(new Bootstrap())->init_hooks();
 	}
 
 
@@ -180,8 +185,11 @@ class Settings {
 
 			switch ( $key ) {
 				case 'apiKey':
-				case 'extraRules':
 					$sanitized[ $key ] = sanitize_text_field( $value );
+					break;
+
+				case 'extraRules':
+					$sanitized[$key] = sanitize_textarea_field($value);
 					break;
 
 				case 'chatPosition':

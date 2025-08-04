@@ -1,7 +1,6 @@
-import { __ } from '@wordpress/i18n';
 import { TabPanel } from '@wordpress/components';
 
-const SettingsTabPanel = ({ activeKey, onSelect, children }) => {
+const SettingsTabPanel = ( { activeKey, onSelect, children } ) => {
 	const tabs = [
 		{
 			name: 'api',
@@ -17,12 +16,12 @@ const SettingsTabPanel = ({ activeKey, onSelect, children }) => {
 
 	return (
 		<TabPanel
-			tabs={tabs}
+			tabs={ tabs }
 			activeClass="is-active"
-			activeName={activeKey}
-			onSelect={onSelect}
+			activeName={ activeKey }
+			onSelect={ onSelect }
 		>
-			{children}
+			{ children }
 		</TabPanel>
 	);
 };

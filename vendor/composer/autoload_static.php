@@ -22,12 +22,19 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
 
     public static $classMap = array (
         'Art\\ChatAi\\Admin\\Settings' => __DIR__ . '/../..' . '/src/php/Admin/Settings.php',
+        'Art\\ChatAi\\Api\\Client' => __DIR__ . '/../..' . '/src/php/Api/Client.php',
+        'Art\\ChatAi\\Api\\Operation' => __DIR__ . '/../..' . '/src/php/Api/Operation.php',
         'Art\\ChatAi\\Enqueue' => __DIR__ . '/../..' . '/src/php/Enqueue.php',
         'Art\\ChatAi\\Frontend\\View' => __DIR__ . '/../..' . '/src/php/Frontend/View.php',
         'Art\\ChatAi\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/php/Helpers/Helper.php',
         'Art\\ChatAi\\Helpers\\Templater' => __DIR__ . '/../..' . '/src/php/Helpers/Templater.php',
         'Art\\ChatAi\\Helpers\\Utils' => __DIR__ . '/../..' . '/src/php/Helpers/Utils.php',
         'Art\\ChatAi\\Main' => __DIR__ . '/../..' . '/src/php/Main.php',
+        'Art\\ChatAi\\Rest\\Admin\\Bootstrap' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Bootstrap.php',
+        'Art\\ChatAi\\Rest\\Admin\\PingOperation' => __DIR__ . '/../..' . '/src/php/Rest/Admin/PingOperation.php',
+        'Art\\ChatAi\\Rest\\Admin\\SyncOperation' => __DIR__ . '/../..' . '/src/php/Rest/Admin/SyncOperation.php',
+        'Art\\ChatAi\\Rest\\Bootstrapper' => __DIR__ . '/../..' . '/src/php/Rest/Bootstrapper.php',
+        'Art\\ChatAi\\Rest\\Router' => __DIR__ . '/../..' . '/src/php/Rest/Router.php',
         'Art\\ChatAi\\Traits\\SingletonTrait' => __DIR__ . '/../..' . '/src/php/Traits/SingletonTrait.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
