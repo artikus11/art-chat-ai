@@ -1,10 +1,10 @@
 <?php
 
-namespace Art\ChatAi\Rest\Admin;
+namespace Art\ChatAi\Rest\Admin\Operations;
 
 use Art\ChatAi\Api\Operation;
 
-class SyncOperation extends Operation {
+class Sync extends Operation {
 
 	/**
 	 * @throws \Exception

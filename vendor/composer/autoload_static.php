@@ -30,6 +30,7 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
         'Art\\ChatAi\\Helpers\\Templater' => __DIR__ . '/../..' . '/src/php/Helpers/Templater.php',
         'Art\\ChatAi\\Helpers\\Utils' => __DIR__ . '/../..' . '/src/php/Helpers/Utils.php',
         'Art\\ChatAi\\Main' => __DIR__ . '/../..' . '/src/php/Main.php',
+        'Art\\ChatAi\\Rest\\Admin\\AdditionalsOperation' => __DIR__ . '/../..' . '/src/php/Rest/Admin/AdditionalsOperation.php',
         'Art\\ChatAi\\Rest\\Admin\\Bootstrap' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Bootstrap.php',
         'Art\\ChatAi\\Rest\\Admin\\PingOperation' => __DIR__ . '/../..' . '/src/php/Rest/Admin/PingOperation.php',
         'Art\\ChatAi\\Rest\\Admin\\SyncOperation' => __DIR__ . '/../..' . '/src/php/Rest/Admin/SyncOperation.php',

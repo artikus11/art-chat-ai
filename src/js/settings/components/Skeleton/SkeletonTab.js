@@ -1,5 +1,3 @@
-import SkeletonPreloadText from './SkeletonPreloadText';
-
 const SkeletonTab = ( { isActive = false } ) => (
 
 	<div

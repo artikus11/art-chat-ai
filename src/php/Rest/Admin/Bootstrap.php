@@ -2,6 +2,9 @@
 
 namespace Art\ChatAi\Rest\Admin;
 
+use Art\ChatAi\Rest\Admin\Operations\Additionals;
+use Art\ChatAi\Rest\Admin\Operations\Ping;
+use Art\ChatAi\Rest\Admin\Operations\Sync;
 use Art\ChatAi\Rest\Bootstrapper;
 use Art\ChatAi\Rest\Router;
 
@@ -13,13 +16,21 @@ class Bootstrap extends Bootstrapper {
 
 		$router->register(
 			'sync',
-			SyncOperation::class,
+			Sync::class,
+			[ 'POST' ],
 			'manage_options'
 		);
 
 		$router->register(
 			'ping',
-			PingOperation::class
+			Ping::class,
+			[ 'GET' ]
+		);
+
+		$router->register(
+			'all-additionals',
+			Additionals::class,
+			[ 'GET' ]
 		);
 	}
 }

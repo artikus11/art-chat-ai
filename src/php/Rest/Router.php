@@ -7,13 +7,13 @@ use WP_REST_Request;
 
 class Router {
 
-	public function register( $route, $operation_class, $permission = '__return_true' ): static {
+	public function register( $route, $operation_class, $methods = [ 'POST' ], $permission = '__return_true' ): static {
 
 		register_rest_route(
 			Utils::get_plugin_prefix() . '/v1',
 			"/$route",
 			[
-				'methods'             => 'POST',
+				'methods'             => $methods,
 				'callback'            => function ( WP_REST_Request $request ) use ( $operation_class ) {
 
 					$operation = new $operation_class( $request );

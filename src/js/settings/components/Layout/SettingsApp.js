@@ -50,7 +50,7 @@ const SettingsApp = observer( () => {
 					<PanelRow>
 						<SaveButton
 							onClick={ handleSettingsSave }
-							disabled={ isLoading || isSaving }
+							disabled={ isSaving }
 							isSaving={ isSaving }
 						/>
 					</PanelRow>

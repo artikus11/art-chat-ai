@@ -31,7 +31,7 @@ class SettingsStore {
 			return;
 		}
 
-		this.rootStore.uiStore.setLoading( true )
+		this.rootStore.uiStore.setLoading( 'saveSettings', true );
 		this.error = null;
 
 		try {
@@ -50,8 +50,27 @@ class SettingsStore {
 			} );
 		} finally {
 			runInAction( () => {
-				this.rootStore.uiStore.setLoading( false );
+				this.rootStore.uiStore.setLoading( 'saveSettings', false );
 			} );
+		}
+	};
+
+	getCurrentSettings() {
+		return this.settings;
+	}
+
+	refreshSettings = async () => {
+		try {
+			const freshSettings = await SettingsService.getSettings();
+			runInAction( () => {
+				this.settings = { ...this.settings, ...freshSettings };
+			} );
+			return this.settings;
+		} catch ( error ) {
+			runInAction( () => {
+				this.error = error.message;
+			} );
+			throw error;
 		}
 	};
 
@@ -63,7 +82,7 @@ class SettingsStore {
 	};
 
 	saveSettings = async () => {
-		this.rootStore.uiStore.setSaving( true );
+		this.rootStore.uiStore.setLoading( 'saveSettings', true );
 
 		try {
 			const result = await SettingsService.saveSettings( this.settings );
@@ -79,7 +98,7 @@ class SettingsStore {
 				message: error.message || 'Ошибка сети'
 			};
 		} finally {
-			this.rootStore.uiStore.setSaving( false );
+			this.rootStore.uiStore.setLoading( 'saveSettings', false );
 		}
 	};
 }

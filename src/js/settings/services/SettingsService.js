@@ -4,7 +4,6 @@ class SettingsService {
 	static async getSettings() {
 		try {
 			const data = await apiFetch( { path: '/wp/v2/settings' } );
-			console.log('Raw settings from API:', data);
 			return data[ 'acai_settings' ] || {};
 		} catch ( error ) {
 			console.error( 'Ошибка загрузки настроек:', error );

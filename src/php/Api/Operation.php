@@ -10,7 +10,7 @@ abstract class Operation {
 	protected WP_REST_Request $request;
 
 
-	protected ?string $api_key;
+	protected ?string $api_key  = null;
 
 
 	protected Client $client;
@@ -42,6 +42,7 @@ abstract class Operation {
 	protected function validate_request(): void {
 
 		$this->api_key = $this->get_api_key();
+
 		if ( empty( $this->api_key ) ) {
 			throw new \Exception( 'API-ключ не задан' );
 		}
@@ -61,7 +62,7 @@ abstract class Operation {
 
 		$settings = get_option( 'acai_settings', [] );
 
-		return $settings['api_key'] ?? '';
+		return $settings['apiKey'] ?? '';
 	}
 
 

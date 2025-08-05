@@ -9,12 +9,30 @@ class SyncService {
 		} );
 	}
 
-	static async pingToApi( apiKey ) {
-		return await apiFetch( {
-			path: '/acai/v1/ping',
-			method: 'GET',
-			data: { api_key: apiKey }
-		} );
+	static async pingToApi() {
+		try {
+			await apiFetch( {
+				path: '/acai/v1/ping'
+			} );
+
+			return { success: true, message: 'Успешное соединение' };
+		} catch ( error ) {
+			return { success: false, message: 'Ошибка соединения: ' + error.message };
+		}
+	}
+
+	static async getAllAdditionals() {
+		try {
+			const result = await apiFetch( {
+				path: '/acai/v1/all-additionals',
+				method: 'GET',
+			} );
+
+			console.log( 'SyncService: ' + result );
+			return { success: true, message: 'Успешное получение' };
+		} catch ( error ) {
+			return { success: false, message: 'Ошибка соединения: ' + error.message };
+		}
 	}
 }
 

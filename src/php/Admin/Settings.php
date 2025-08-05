@@ -2,10 +2,8 @@
 
 namespace Art\ChatAi\Admin;
 
-use Art\ChatAi\Api\Client;
 use Art\ChatAi\Main;
-use Art\ChatAi\Rest\Admin\Bootstrap;
-use WP_REST_Response;
+use Art\ChatAi\Rest\Admin\Bootstrap as AdminBoostrapRest;
 
 class Settings {
 
@@ -37,7 +35,7 @@ class Settings {
 		add_action( 'admin_menu', [ $this, 'register_menu_page' ] );
 		add_action( 'rest_api_init', [ $this, 'register_settings' ] );
 
-		(new Bootstrap())->init_hooks();
+		( new AdminBoostrapRest() )->init_hooks();
 	}
 
 
@@ -77,40 +75,42 @@ class Settings {
 	 */
 	public static function get_schema(): array {
 
-		if ( empty( self::$schema ) ) {
-			self::$schema = [
-				'type'       => 'object',
-				'properties' => [
-					'apiKey'       => [
-						'type'        => 'string',
-						'default'     => '123',
-						'description' => 'API-ключ для авторизации в чате Varman',
-					],
-					'extraRules'   => [
-						'type'        => 'string',
-						'default'     => '1111111111111111',
-						'description' => 'Дополнительные правила поведения чата (текст)',
-					],
-					'chatPosition' => [
-						'type'        => 'string',
-						'default'     => 'right',
-						'enum'        => [ 'left', 'right' ],
-						'description' => 'Расположение окна чата на экране',
-					],
-					'chatColor'    => [
-						'type'        => 'string',
-						'default'     => '#007cba',
-						'pattern'     => '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
-						'description' => 'Цвет чата в формате HEX',
-					],
-					'showAvatar'   => [
-						'type'        => 'boolean',
-						'default'     => true,
-						'description' => 'Показывать аватар в чате',
-					],
-				],
-			];
+		if ( ! empty( self::$schema ) ) {
+			return self::$schema;
 		}
+
+		self::$schema = [
+			'type'       => 'object',
+			'properties' => [
+				'apiKey'       => [
+					'type'        => 'string',
+					'default'     => '123',
+					'description' => 'API-ключ для авторизации в чате Varman',
+				],
+				'extraRules'   => [
+					'type'        => 'string',
+					'default'     => '1111111111111111',
+					'description' => 'Дополнительные правила поведения чата (текст)',
+				],
+				'chatPosition' => [
+					'type'        => 'string',
+					'default'     => 'right',
+					'enum'        => [ 'left', 'right' ],
+					'description' => 'Расположение окна чата на экране',
+				],
+				'chatColor'    => [
+					'type'        => 'string',
+					'default'     => '#007cba',
+					'pattern'     => '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+					'description' => 'Цвет чата в формате HEX',
+				],
+				'showAvatar'   => [
+					'type'        => 'boolean',
+					'default'     => true,
+					'description' => 'Показывать аватар в чате',
+				],
+			],
+		];
 
 		return self::$schema;
 	}
@@ -126,12 +126,16 @@ class Settings {
 	 */
 	public static function get_defaults(): array {
 
-		if ( empty( self::$defaults ) ) {
-			$schema         = self::get_schema();
-			self::$defaults = [];
-			foreach ( $schema['properties'] as $key => $prop ) {
-				self::$defaults[ $key ] = $prop['default'];
-			}
+		if ( ! empty( self::$defaults ) ) {
+			return self::$defaults;
+		}
+
+		$schema = self::get_schema();
+
+		self::$defaults = [];
+
+		foreach ( $schema['properties'] as $key => $prop ) {
+			self::$defaults[ $key ] = $prop['default'];
 		}
 
 		return self::$defaults;
@@ -165,12 +169,12 @@ class Settings {
 	/**
 	 * Санитизация входящих данных перед сохранением.
 	 *
-	 * @param  mixed $input Входные данные (ожидается массив)
+	 * @param  array $input Входные данные (ожидается массив)
 	 *
 	 * @return array Санитизированные настройки
 	 * @since 1.0.0
 	 */
-	public function sanitize_settings( $input ): array {
+	public function sanitize_settings( array $input ): array {
 
 		$sanitized = [];
 		$defaults  = self::get_defaults();
@@ -189,7 +193,7 @@ class Settings {
 					break;
 
 				case 'extraRules':
-					$sanitized[$key] = sanitize_textarea_field($value);
+					$sanitized[ $key ] = sanitize_textarea_field( $value );
 					break;
 
 				case 'chatPosition':
@@ -221,7 +225,7 @@ class Settings {
 	 * @return array Ассоциативный массив настроек
 	 * @since 1.0.0
 	 */
-	public function get() {
+	public function get(): array {
 
 		$saved = get_option( $this->option_name, [] );
 
@@ -237,7 +241,7 @@ class Settings {
 	 * @return bool Успешно ли сохранено
 	 * @since 1.0.0
 	 */
-	public function save( $data ) {
+	public function save( array $data ): bool {
 
 		return update_option( $this->option_name, $data );
 	}

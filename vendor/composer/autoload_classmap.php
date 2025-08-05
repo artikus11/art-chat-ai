@@ -15,6 +15,7 @@ return array(
     'Art\\ChatAi\\Helpers\\Templater' => $baseDir . '/src/php/Helpers/Templater.php',
     'Art\\ChatAi\\Helpers\\Utils' => $baseDir . '/src/php/Helpers/Utils.php',
     'Art\\ChatAi\\Main' => $baseDir . '/src/php/Main.php',
+    'Art\\ChatAi\\Rest\\Admin\\AdditionalsOperation' => $baseDir . '/src/php/Rest/Admin/AdditionalsOperation.php',
     'Art\\ChatAi\\Rest\\Admin\\Bootstrap' => $baseDir . '/src/php/Rest/Admin/Bootstrap.php',
     'Art\\ChatAi\\Rest\\Admin\\PingOperation' => $baseDir . '/src/php/Rest/Admin/PingOperation.php',
     'Art\\ChatAi\\Rest\\Admin\\SyncOperation' => $baseDir . '/src/php/Rest/Admin/SyncOperation.php',

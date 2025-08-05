@@ -3,19 +3,47 @@ import { makeAutoObservable, runInAction } from 'mobx';
 class UiStore {
 	isLoading = false;
 	isSaving = false;
+	isSyncing = false;
 	notices = [];
+
+	loadingStates = {
+		ping: false,
+		fetchAdditionals: false,
+		saveSettings: false,
+	};
 
 	constructor( rootStore ) {
 		this.rootStore = rootStore;
+
 		makeAutoObservable( this );
 	}
 
-	setLoading = ( state ) => {
+	/*setLoading = ( state ) => {
 		this.isLoading = state;
-	};
+	};*/
+
+	setLoading(key, value) {
+		runInAction(() => {
+			this.loadingStates = { ...this.loadingStates, [key]: value };
+		});
+	}
+	get isLoadingPing() {
+		return this.loadingStates.ping;
+	}
+
+	get isLoadingAdditionals() {
+		return this.loadingStates.fetchAdditionals;
+	}
+	get isSaving() {
+		return this.loadingStates.saveSettings;
+	}
 
 	setSaving = ( state ) => {
 		this.isSaving = state;
+	};
+
+	setSyncing = ( state ) => {
+		this.isSyncing = state;
 	};
 
 	handleSettingsSave = async () => {
