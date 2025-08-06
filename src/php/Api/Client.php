@@ -16,6 +16,9 @@ class Client {
 	private int $timeout;
 
 
+	private ?array $cached_additional_files = null;
+
+
 	/**
 	 * @param  string $base_url Базовый URL API (по умолчанию 'https://chat.varman.pro')
 	 * @param  int    $timeout  Таймаут запросов в секундах (по умолчанию 60)
@@ -142,6 +145,80 @@ class Client {
 
 
 	/**
+	 * Гарантирует существование additional-файла в системе
+	 *
+	 * @param  string $file_name Имя файла
+	 *
+	 * @return array ['success' => bool, 'message' => string]
+	 */
+	public function ensure_additional_file_exists( string $file_name ): array {
+
+		if ( $this->cached_additional_files === null ) {
+			$result = $this->get_all_additional();
+
+			if ( ! $result['success'] ) {
+				return [
+					'success' => false,
+					'message' => 'Не удалось получить список additional файлов: ' . $result['message'],
+					'data'    => [],
+				];
+			}
+
+			$files = $result['data'] ?? [];
+
+			if ( ! is_array( $files ) ) {
+				return [
+					'success' => false,
+					'message' => 'Некорректный ответ от API: ожидался массив файлов',
+					'data'    => [],
+				];
+			}
+
+			$this->cached_additional_files = $files;
+		}
+
+		if ( in_array( $file_name, $this->cached_additional_files ) ) {
+			return [
+				'success' => true,
+				'message' => "Файл '$file_name' уже существует. Пропускаем создание.",
+				'data'    => [
+					'action' => 'ensure_skipped',
+					'exists' => true,
+				],
+			];
+		}
+
+		$creation_result = $this->post( '/embeddings/additional', [
+			'fileName'  => $file_name,
+			'fileTexts' => [ '// Правила' ],
+		] );
+
+		if ( $creation_result['success'] ) {
+
+			$this->cached_additional_files[] = $file_name;
+
+			return [
+				'success' => true,
+				'message' => "Файл '$file_name' успешно создан в системе.",
+				'data'    => [
+					'action' => 'ensure_created',
+					'exists' => true,
+				],
+			];
+		}
+
+		return [
+			'success' => false,
+			'message' => "Не удалось создать файл '$file_name': " . ( $creation_result['message'] ?? 'Неизвестная ошибка' ),
+			'data'    => [
+				'action' => 'ensure_failed',
+				'exists' => false,
+			],
+		];
+	}
+
+
+	/**
 	 * Добавляет дополнительные данные
 	 *
 	 * @param  array  $lines     Массив строк для добавления
@@ -151,10 +228,39 @@ class Client {
 	 */
 	public function add_additional( array $lines, string $file_name ): array {
 
-		return $this->post( '/embeddings/additional', [
-			'file_name'  => $file_name,
-			'file_texts' => $lines,
+		$ensure = $this->ensure_additional_file_exists( $file_name );
+
+		if ( ! $ensure['success'] ) {
+			return $ensure;
+		}
+
+		$response = $this->post( '/embeddings/additional', [
+			'fileName'  => $file_name,
+			'fileTexts' => $lines,
 		] );
+
+		if ( $response['success'] ) {
+			return [
+				'success' => true,
+				'message' => "Дополнительные данные успешно добавлены в файл '$file_name'.",
+				'data'    => [
+					'action'     => 'added',
+					'file_name'  => $file_name,
+					'line_count' => count( $lines ),
+					'ensure'     => $ensure['data'] ?? [],
+				],
+			];
+		}
+
+		return [
+			'success' => false,
+			'message' => "Не удалось добавить данные в файл '$file_name': " . $response['message'],
+			'data'    => [
+				'action'    => 'add_failed',
+				'ensure'    => $ensure['data'] ?? [],
+				'api_error' => $response['message'],
+			],
+		];
 	}
 
 
@@ -168,10 +274,33 @@ class Client {
 	 */
 	public function update_additional( array $lines, string $file_name ): array {
 
-		return $this->put( '/embeddings/additional', [
-			'file_name'  => $file_name,
-			'file_texts' => $lines,
+		$response = $this->put( '/embeddings/additional', [
+			'fileName'  => $file_name,
+			'fileTexts' => $lines,
 		] );
+
+		if ( $response['success'] ) {
+			return [
+				'success' => true,
+				'message' => "Дополнительные данные успешно добавлены в файл '$file_name'.",
+				'data'    => [
+					'action'     => 'update',
+					'file_name'  => $file_name,
+					'line_count' => count( $lines ),
+					'ensure'     => $ensure['data'] ?? [],
+				],
+			];
+		}
+
+		return [
+			'success' => false,
+			'message' => "Не удалось обновить данные в файле '$file_name': " . $response['message'],
+			'data'    => [
+				'action'    => 'update_failed',
+				'ensure'    => $ensure['data'] ?? [],
+				'api_error' => $response['message'],
+			],
+		];
 	}
 
 
@@ -214,6 +343,39 @@ class Client {
 
 		return $this->get( '/embeddings/additionals' );
 	}
+
+
+	public function sync_additional( array $lines, string $file_name, bool $regenerate_all = false ): array {
+
+		$update_result = $this->update_additional( $lines, $file_name );
+
+		if ( ! $update_result['success'] ) {
+			return $update_result;
+		}
+
+		$regenerate_result = $this->regenerate_embeddings( $regenerate_all );
+
+		if ( ! $regenerate_result['success'] ) {
+			return [
+				'success' => false,
+				'message' => 'Данные обновлены, но не удалось перегенерировать embeddings: ' . $regenerate_result['message'],
+				'data'    => [
+					'update'     => $update_result['data'],
+					'regenerate' => null,
+				],
+			];
+		}
+
+		return [
+			'success' => true,
+			'message' => 'База знаний обновлена и embeddings перегенерированы.',
+			'data'    => [
+				'update'     => $update_result['data'],
+				'regenerate' => $regenerate_result['data'],
+			],
+		];
+	}
+
 
 	/**
 	 * Получает все дополнительные данные
@@ -362,14 +524,15 @@ class Client {
 		if ( is_wp_error( $response ) ) {
 			return [
 				'success' => false,
-				'message' => $response->get_error_message(),
+				'message' => 'Сетевая ошибка: ' . $response->get_error_message(),
+				'status'  => 500,
 			];
 		}
 
 		$code = wp_remote_retrieve_response_code( $response );
 		$body = trim( wp_remote_retrieve_body( $response ) );
 
-		if ( $code >= 200 && $code < 300 ) {
+		if ( $this->is_success_status( $code ) ) {
 			$json = json_decode( $body, true );
 
 			return [
@@ -379,10 +542,53 @@ class Client {
 			];
 		}
 
+
+		$error_message = $this->parse_error_message( $body, $code );
+
 		return [
 			'success' => false,
-			'message' => "Ошибка $code: " . ( $body ? : 'Пустой ответ' ),
+			'message' => $error_message,
 			'status'  => $code,
 		];
+	}
+
+
+	/**
+	 * Обрабатывает тело HTTP-ошибки и возвращает человекочитаемое сообщение
+	 *
+	 * @param  string $body Тело ответа
+	 * @param  int    $code HTTP-статус
+	 *
+	 * @return string
+	 */
+	private function parse_error_message( string $body, int $code ): string {
+
+		if ( empty( $body ) ) {
+			return "Ошибка $code: пустой ответ от сервера";
+		}
+
+		$json = json_decode( $body, true );
+
+		if ( json_last_error() === JSON_ERROR_NONE ) {
+			if ( ! empty( $json['error'] ) ) {
+				$message = $json['error'];
+				if ( ! empty( $json['details'] ) ) {
+					$message .= ': ' . $json['details'];
+				}
+
+				return $message;
+			}
+			if ( ! empty( $json['message'] ) ) {
+				return $json['message'];
+			}
+		}
+
+		return $body;
+	}
+
+
+	private function is_success_status( int $status ): bool {
+
+		return $status >= 200 && $status < 300;
 	}
 }

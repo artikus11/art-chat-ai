@@ -101,6 +101,15 @@ class Utils {
 	/**
 	 * @return string
 	 */
+	public static function get_file_rules_name(): string {
+
+		return 'varman-rules.add';
+	}
+
+
+	/**
+	 * @return string
+	 */
 	public static function get_minified_suffix(): string {
 
 		return defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';

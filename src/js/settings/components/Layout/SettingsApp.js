@@ -14,8 +14,8 @@ import SkeletonLoader from '../Skeleton/SkeletonLoader';
 
 const SettingsApp = observer( () => {
 	const { settingsStore, uiStore } = useStores();
-	const { settings, activeTab, setActiveTab, isInitialized } = settingsStore;
-	const { isLoading, isSaving, handleSettingsSave, notices } = uiStore;
+	const { settings, saveSettings, activeTab, setActiveTab, isInitialized } = settingsStore;
+	const { isSavingSettings, notices } = uiStore;
 
 	if ( ! isInitialized ) {
 		return <SkeletonLoader/>
@@ -49,9 +49,9 @@ const SettingsApp = observer( () => {
 				<PanelBody>
 					<PanelRow>
 						<SaveButton
-							onClick={ handleSettingsSave }
-							disabled={ isSaving }
-							isSaving={ isSaving }
+							onClick={ saveSettings }
+							disabled={ isSavingSettings }
+							isLoading={ isSavingSettings }
 						/>
 					</PanelRow>
 				</PanelBody>

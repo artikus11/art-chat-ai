@@ -1,14 +1,14 @@
 import { Button } from '@wordpress/components';
 
-const SyncButton = ( { onClick, isLoading } ) => (
+const AdditionalsButton = ( { onClick, isLoading } ) => (
 	<Button
 		variant="secondary"
 		onClick={ onClick }
 		isBusy={ isLoading }
 		disabled={ isLoading }
 	>
-		{ isLoading ? 'Обновление...' : 'Обновить базу знаний' }
+		{ isLoading ? 'Проверяем...' : 'Получить' }
 	</Button>
 );
 
-export default SyncButton;
+export default AdditionalsButton;

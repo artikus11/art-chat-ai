@@ -20,7 +20,7 @@ class SyncStore {
 
 			runInAction( () => {
 				if ( result.success ) {
-					this.rootStore.uiStore.addNotice( 'success', result.message || 'Настройки успешно сохранены' );
+					this.rootStore.uiStore.addNotice( 'success', result.message || 'Соединение успешно' );
 				} else {
 					this.rootStore.uiStore.addNotice( 'error', result.message || 'Ошибка при сохранении настроек' );
 				}
@@ -32,6 +32,29 @@ class SyncStore {
 
 		} finally {
 			this.rootStore.uiStore.setLoading( 'ping', false )
+		}
+
+	};
+	sync = async () => {
+		this.rootStore.uiStore.setLoading( 'sync', true )
+
+		try {
+			const result = await SyncService.syncToApi();
+
+			runInAction( () => {
+				if ( result.success ) {
+					this.rootStore.uiStore.addNotice( 'success', result.message || 'Обновление успешно проведено' );
+				} else {
+					this.rootStore.uiStore.addNotice( 'error', result.message || 'Ошибка при обновлении базы знаний' );
+				}
+			} );
+		} catch ( error ) {
+			runInAction( () => {
+				this.rootStore.uiStore.addNotice( 'error', error.message || 'Неизвестная ошибка' );
+			} );
+
+		} finally {
+			this.rootStore.uiStore.setLoading( 'sync', false )
 		}
 
 	};

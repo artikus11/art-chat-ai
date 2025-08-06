@@ -1,6 +1,7 @@
 /* global ChatbotSettings*/
 import { makeAutoObservable, runInAction } from 'mobx';
 import SettingsService from '../services/SettingsService';
+import SyncService from '../services/SyncService';
 
 class SettingsStore {
 	settings = { ...ChatbotSettings.defaults };
@@ -87,9 +88,16 @@ class SettingsStore {
 		try {
 			const result = await SettingsService.saveSettings( this.settings );
 
-			if ( result.success ) {
-				return result;
-			}
+			await SyncService.addAdditional();
+
+			runInAction( () => {
+				if ( result.success ) {
+					this.rootStore.uiStore.addNotice( 'success', result.message || 'Настройки успешно сохранены' );
+				} else {
+					this.rootStore.uiStore.addNotice( 'error', result.message || 'Ошибка при сохранении настроек' );
+				}
+			} );
+
 			return result;
 
 		} catch ( error ) {

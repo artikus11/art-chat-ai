@@ -1,13 +1,13 @@
 import { Button } from '@wordpress/components';
 
-const SaveButton = ( { onClick, isSaving } ) => (
+const SaveButton = ( { onClick, isLoading } ) => (
 	<Button
 		isPrimary
 		onClick={ onClick }
-		isBusy={ isSaving }
-		disabled={ isSaving }
+		isBusy={ isLoading }
+		disabled={ isLoading }
 	>
-		{ isSaving ? 'Сохранение...' : 'Сохранить настройки' }
+		{ isLoading ? 'Сохранение...' : 'Сохранить настройки' }
 	</Button>
 );
 

@@ -7,23 +7,24 @@ import AdditionalsButton from '../Buttons/AdditionalsButton';
 
 const SyncPanel = observer( () => {
 	const { uiStore, syncStore } = useStores();
-	const { isLoadingPing, isLoadingAdditionals } = uiStore;
+	const { isLoadingPing, isSyncing, isLoadingAdditionals } = uiStore;
 
 	return (
 		<>
 			<PanelBody title="Синхронизация с API" initialOpen={ true }>
 				<PanelRow>
 					<SyncButton
-						//onClick={() => settingsStore.syncWithApi()}
+						onClick={ () => syncStore.sync() }
+						isLoading={ isSyncing }
 					/>
 
-					<AdditionalsButton
-						onClick={() => syncStore.getAllAdditionals()}
-						isLoading={isLoadingAdditionals}
-					/>
+					{/*<AdditionalsButton
+					 onClick={() => syncStore.getAllAdditionals()}
+					 isLoading={isLoadingAdditionals}
+					 />*/ }
 					<PingButton
-						onClick={() => syncStore.ping()}
-						isLoading={isLoadingPing}
+						onClick={ () => syncStore.ping() }
+						isLoading={ isLoadingPing }
 					/>
 				</PanelRow>
 			</PanelBody>

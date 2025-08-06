@@ -10,6 +10,7 @@ class UiStore {
 		ping: false,
 		fetchAdditionals: false,
 		saveSettings: false,
+		sync: false,
 	};
 
 	constructor( rootStore ) {
@@ -18,15 +19,12 @@ class UiStore {
 		makeAutoObservable( this );
 	}
 
-	/*setLoading = ( state ) => {
-		this.isLoading = state;
-	};*/
-
 	setLoading(key, value) {
 		runInAction(() => {
 			this.loadingStates = { ...this.loadingStates, [key]: value };
 		});
 	}
+
 	get isLoadingPing() {
 		return this.loadingStates.ping;
 	}
@@ -34,8 +32,13 @@ class UiStore {
 	get isLoadingAdditionals() {
 		return this.loadingStates.fetchAdditionals;
 	}
-	get isSaving() {
+
+	get isSavingSettings() {
 		return this.loadingStates.saveSettings;
+	}
+
+	get isSyncing() {
+		return this.loadingStates.sync;
 	}
 
 	setSaving = ( state ) => {
@@ -44,29 +47,6 @@ class UiStore {
 
 	setSyncing = ( state ) => {
 		this.isSyncing = state;
-	};
-
-	handleSettingsSave = async () => {
-		this.setSaving( true );
-
-		try {
-			const result = await this.rootStore.settingsStore.saveSettings();
-			runInAction( () => {
-				if ( result.success ) {
-					this.addNotice( 'success', result.message || 'Настройки успешно сохранены' );
-				} else {
-					this.addNotice( 'error', result.message || 'Ошибка при сохранении настроек' );
-				}
-			} );
-
-		} catch ( error ) {
-			runInAction( () => {
-				this.addNotice( 'error', error.message || 'Неизвестная ошибка' );
-			} );
-
-		} finally {
-			this.setSaving( false );
-		}
 	};
 
 	addNotice = ( type, message, duration = 5000 ) => {
