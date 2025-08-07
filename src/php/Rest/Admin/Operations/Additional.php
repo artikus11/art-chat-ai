@@ -26,7 +26,7 @@ class Additional extends Operation {
 				'status'  => 405,
 			],
 		};
-		error_log( print_r( $result, true ) );
+
 		if ( $result['success'] ) {
 			return [
 				'success' => true,

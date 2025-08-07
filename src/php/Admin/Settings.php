@@ -87,6 +87,11 @@ class Settings {
 					'default'     => '123',
 					'description' => 'API-ключ для авторизации в чате Varman',
 				],
+				'oldApiKey'       => [
+					'type'        => 'string',
+					'default'     => '',
+					'description' => '',
+				],
 				'extraRules'   => [
 					'type'        => 'string',
 					'default'     => '1111111111111111',
@@ -189,6 +194,7 @@ class Settings {
 
 			switch ( $key ) {
 				case 'apiKey':
+				case 'oldApiKey':
 					$sanitized[ $key ] = sanitize_text_field( $value );
 					break;
 
@@ -201,7 +207,6 @@ class Settings {
 					break;
 
 				case 'chatColor':
-					// Проверяем формат HEX: #RGB или #RRGGBB
 					$hex_pattern       = '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/';
 					$sanitized[ $key ] = preg_match( $hex_pattern, $value ) ? $value : $default;
 					break;

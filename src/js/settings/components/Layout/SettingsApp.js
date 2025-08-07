@@ -14,10 +14,11 @@ import SkeletonLoader from '../Skeleton/SkeletonLoader';
 
 const SettingsApp = observer( () => {
 	const { settingsStore, uiStore } = useStores();
-	const { settings, saveSettings, activeTab, setActiveTab, isInitialized } = settingsStore;
+	const { settings, saveSettings, activeTab, setActiveTab, isInitializing } = settingsStore;
 	const { isSavingSettings, notices } = uiStore;
 
-	if ( ! isInitialized ) {
+
+	if ( isInitializing ) {
 		return <SkeletonLoader/>
 	}
 

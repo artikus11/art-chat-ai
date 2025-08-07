@@ -1,154 +1,74 @@
-import apiFetch from '@wordpress/api-fetch';
+import ApiService from './ApiService';
 
-class SyncService {
+class SyncService extends ApiService {
 
-	static async syncToApi() {
-
-		try {
-			const result = await apiFetch( {
-				path: '/acai/v1/sync-additional',
-				method: 'POST'
-			} );
-
-			console.log( 'SyncService:syncToApi' );
-			console.log( result );
-
-			return {
-				success: true,
-				message: result.message || 'База знаний успешно обновлены'
-			};
-		} catch ( error ) {
-			return {
-				success: false,
-				message: 'Ошибка соединения: ' + error.message
-			};
-		}
+	constructor() {
+		super( '/acai/v1' );
 	}
 
-	static async pingToApi() {
-		try {
-			const result = await apiFetch( {
-				path: '/acai/v1/ping',
-				method: 'GET',
-			} );
-
-			console.log( 'SyncService:pingToApi' );
-			console.log( result );
-
-			return {
-				success: true,
-				message: result.message || 'Успешное соединение'
-			};
-		} catch ( error ) {
-			return {
-				success: false,
-				message: 'Ошибка соединения: ' + error.message
-			};
-		}
+	async syncToApi() {
+		return this._makeRequest( {
+			endpoint: 'sync-additional',
+			method: 'POST',
+			successMessage: 'База знаний успешно обновлена',
+		} );
 	}
 
-	static async getAllAdditionals() {
-		try {
-			const result = await apiFetch( {
-				path: '/acai/v1/all-additionals',
-				method: 'GET',
-			} );
-			console.log( 'SyncService:getAllAdditionals' );
-			console.log( result );
-			return {
-				success: true,
-				message: result.message || 'Дополнения получены'
-			};
-		} catch ( error ) {
-			return {
-				success: false,
-				message: 'Ошибка соединения: ' + error.message
-			};
-		}
+	async pingToApi() {
+		return this._makeRequest( {
+			endpoint: 'ping',
+			method: 'GET',
+			successMessage: 'Соединение с сервером установлено',
+		} );
 	}
 
-	static async getAdditional() {
-		try {
-			const result = await apiFetch( {
-				path: '/acai/v1/additional',
-				method: 'GET',
-			} );
-
-			console.log( 'SyncService:getAdditional' );
-			console.log( result );
-			return {
-				success: true,
-				message: result.message || 'Успешное соединение'
-			};
-		} catch ( error ) {
-			return {
-				success: false,
-				message: 'Ошибка соединения: ' + error.message
-			};
-		}
+	async getAllAdditionals() {
+		return this._makeRequest( {
+			endpoint: 'all-additionals',
+			method: 'GET',
+			successMessage: 'Список дополнений успешно получен',
+		} );
 	}
 
-	static async addAdditional() {
-		try {
-			const result = await apiFetch( {
-				path: '/acai/v1/additional',
-				method: 'POST',
-			} );
-
-			console.log( 'SyncService:addAdditional' );
-			console.log( result );
-			return {
-				success: true,
-				message: result.message || 'Файл создан'
-			};
-		} catch ( error ) {
-			return {
-				success: false,
-				message: 'Ошибка соединения: ' + error.message
-			};
-		}
+	async getAdditional() {
+		return this._makeRequest( {
+			endpoint: 'additional',
+			method: 'GET',
+			successMessage: 'Дополнение успешно получено',
+		} );
 	}
 
-	static async updateAdditional() {
-		try {
-			const result = await apiFetch( {
-				path: '/acai/v1/additional',
-				method: 'PUT',
-			} );
-
-			console.log( 'SyncService:updateAdditional' );
-			console.log( result );
-			return {
-				success: true,
-				message: result.message || 'Данные обновлены'
-			};
-		} catch ( error ) {
-			return {
-				success: false,
-				message: 'Ошибка соединения: ' + error.message
-			};
-		}
+	async addAdditional() {
+		return this._makeRequest( {
+			endpoint: 'additional',
+			method: 'POST',
+			successMessage: 'Файл успешно создан',
+		} );
 	}
 
-	static async deleteAdditional() {
-		try {
-			const result = await apiFetch( {
-				path: '/acai/v1/additional',
-				method: 'PUT',
-			} );
+	async updateAdditional() {
+		return this._makeRequest( {
+			endpoint: 'additional',
+			method: 'PUT',
+			successMessage: 'Файл успешно обновлен',
+		} );
+	}
 
-			console.log( 'SyncService:deleteAdditional' );
-			console.log( result );
-			return {
-				success: true,
-				message: result.message || 'Данные удалены'
-			};
-		} catch ( error ) {
-			return {
-				success: false,
-				message: 'Ошибка соединения: ' + error.message
-			};
-		}
+	async deleteAdditional() {
+		return this._makeRequest( {
+			endpoint: 'additional',
+			method: 'DELETE',
+			successMessage: 'Файл успешно удален',
+		} );
+	}
+
+	async changeKey() {
+
+		return this._makeRequest( {
+			endpoint: 'change-key',
+			method: 'POST',
+			successMessage: 'Ключ успешно изменен',
+		} );
 	}
 }
 

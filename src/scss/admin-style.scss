@@ -5,6 +5,11 @@
     max-width: media-mixin.rem(900);
     margin: 0 auto;
     position: relative;
+
+    &-row {
+      display: flex;
+      gap: media-mixin.rem(12);
+    }
   }
 
   &-progress-bar {
@@ -39,6 +44,14 @@
     background: #fff;
     border-top: 1px solid #e0e0e0;
 
+    .components-panel__body-toggle.components-button {
+      color: #e0e0e0;
+    }
+
+    .components-panel__body-toggle.components-button .components-panel__arrow {
+      color: #e0e0e0;
+      fill: currentColor;
+    }
   }
 
   &-skeleton-line,
@@ -67,13 +80,13 @@
   &-skeleton-tabs {
     display: flex;
     gap: 1px;
-    padding: 0 media-mixin.rem(12);
+    padding: 0 0;
     border-left: 1px solid #e0e0e0;
     border-right: 1px solid #e0e0e0;
   }
 
   &-skeleton-tab {
-    height: media-mixin.rem(36);
+    height: media-mixin.rem(46);
     min-width: media-mixin.rem(80);
     flex: 1;
     max-width: media-mixin.rem(150);
@@ -81,10 +94,10 @@
     animation: acai-pulse 1.2s infinite ease-in-out;
     opacity: 0.6;
     position: relative;
-    display: flex
-  ;
+    display: flex;
     align-items: flex-end;
     padding: 2px 8px;
+    color: #e0e0e0;
   }
 
   &-skeleton-tab-active {

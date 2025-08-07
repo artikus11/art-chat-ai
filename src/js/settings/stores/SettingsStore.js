@@ -1,114 +1,120 @@
 /* global ChatbotSettings*/
 import { makeAutoObservable, runInAction } from 'mobx';
-import SettingsService from '../services/SettingsService';
+import SettingsService from '../services/SettingsService'
 import SyncService from '../services/SyncService';
 
 class SettingsStore {
 	settings = { ...ChatbotSettings.defaults };
-	error = null;
-	isInitialized = false;
+	isInitializing = false;
 
 	constructor( rootStore ) {
 		this.rootStore = rootStore;
+		this.settingsService = new SettingsService();
+		this.syncService = new SyncService();
 
 		makeAutoObservable( this );
-
-		Promise.all( [
-			this.loadSettings(),
-			this.minDelay( 300 )
-		] ).finally( () => {
-			runInAction( () => {
-				this.isInitialized = true;
-			} );
-		} );
+		this.initializeStore().catch(error => {
+			console.error('Failed to initialize SettingsStore:', error);
+		});
 	}
+
+
+	initializeStore = async () => {
+		this.isInitializing = true;
+
+		try {
+			await Promise.all([
+				this.loadSettings(),
+				this.minDelay(300)
+			]);
+
+			runInAction(() => {
+				this.isInitialized = true;
+			});
+		} catch (error) {
+			runInAction(() => {
+				this.error = error.message;
+				this.rootStore.uiStore.showError('Не удалось загрузить настройки');
+			});
+		} finally {
+			runInAction(() => {
+				this.isInitializing = false;
+			});
+		}
+	};
 
 	minDelay = ( ms ) => new Promise( resolve => setTimeout( resolve, ms ) );
 
 	loadSettings = async () => {
-
-		if ( ! this.rootStore || ! this.rootStore.uiStore ) {
-			console.error( 'SettingsStore: rootStore или uiStore не инициализированы' );
-			return;
-		}
-
-		this.rootStore.uiStore.setLoading( 'saveSettings', true );
-		this.error = null;
-
 		try {
-			const savedSettings = await SettingsService.getSettings();
-
-			runInAction( () => {
-				this.settings = {
-					...this.settings,
-					...savedSettings,
-				};
-			} );
-
-		} catch ( error ) {
-			runInAction( () => {
-				this.error = error.message;
-			} );
-		} finally {
-			runInAction( () => {
-				this.rootStore.uiStore.setLoading( 'saveSettings', false );
-			} );
+			const savedSettings = await this.rootStore.withLoading(
+				'saveSettings',
+				() => this.settingsService.getSettings()
+			);
+			this.updateSettings(savedSettings);
+		} catch (error) {
+			this.error = error.message;
 		}
 	};
 
-	getCurrentSettings() {
+	updateSettings = (newSettings) => {
+		this.settings = {
+			...this.settings,
+			...newSettings
+		};
+	};
+
+	updateSetting = (key, value) => {
+		this.updateSettings({ [key]: value });
+	};
+
+	getCurrentSettings = () => {
 		return this.settings;
-	}
+	};
 
 	refreshSettings = async () => {
 		try {
-			const freshSettings = await SettingsService.getSettings();
-			runInAction( () => {
-				this.settings = { ...this.settings, ...freshSettings };
-			} );
+			const freshSettings = await this.settingsService.getSettings();
+			this.updateSettings(freshSettings);
 			return this.settings;
-		} catch ( error ) {
-			runInAction( () => {
-				this.error = error.message;
-			} );
+		} catch (error) {
+			this.error = error.message;
 			throw error;
 		}
 	};
 
-	updateSetting = ( key, value ) => {
-		this.settings = {
-			...this.settings,
-			[ key ]: value
-		};
-	};
-
 	saveSettings = async () => {
-		this.rootStore.uiStore.setLoading( 'saveSettings', true );
-
-		try {
-			const result = await SettingsService.saveSettings( this.settings );
-
-			await SyncService.addAdditional();
-
-			runInAction( () => {
-				if ( result.success ) {
-					this.rootStore.uiStore.addNotice( 'success', result.message || 'Настройки успешно сохранены' );
-				} else {
-					this.rootStore.uiStore.addNotice( 'error', result.message || 'Ошибка при сохранении настроек' );
-				}
-			} );
-
-			return result;
-
-		} catch ( error ) {
-			return {
-				success: false,
-				message: error.message || 'Ошибка сети'
-			};
-		} finally {
-			this.rootStore.uiStore.setLoading( 'saveSettings', false );
-		}
+		return this.rootStore.withLoading(
+			'saveSettings',
+			async () => {
+				const result = await this.settingsService.saveSettings(this.settings);
+				await this.syncService.addAdditional();
+				return result;
+			},
+			{
+				showSuccess: true,
+				successMessage: 'Настройки успешно сохранены'
+			}
+		);
 	};
+
+	setLoading = ( isLoading ) => {
+		runInAction( () => {
+			this.rootStore.uiStore.setLoading( 'saveSettings', isLoading );
+		} );
+	}
+
+	setError = ( message ) => {
+		runInAction( () => {
+			this.error = message;
+		} );
+	}
+
+	showNotification = ( type, message ) => {
+		runInAction( () => {
+			this.rootStore.uiStore.addNotice( type, message );
+		} );
+	}
 }
 
 export default SettingsStore;

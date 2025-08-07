@@ -86,18 +86,19 @@ class Enqueue {
 			true
 		);
 
-		// Получаем экземпляр Settings
-		$settings_instance = new Settings( $this->main ); // или через DI
+
+		$settings_instance = new Settings( $this->main );
+
 		wp_localize_script(
 			$this->get_prefix() . '-settings-script',
 			'ChatbotSettings',
 			[
 				'defaults'   => Settings::get_defaults(),
-				'current'    => $settings_instance->get(), // ← вызываем метод экземпляра
+				'current'    => $settings_instance->get(),
 				'optionName' => $settings_instance->get_option_name(),
 				'version' => $this->main->get_utils()->get_plugin_version(),
 				'rest'       => [
-					'apiRoot' => esc_url_raw( rest_url() ),
+					'root' => esc_url_raw( rest_url() ),
 					'nonce'   => wp_create_nonce( 'wp_rest' ),
 				],
 			]

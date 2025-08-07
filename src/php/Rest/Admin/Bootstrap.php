@@ -4,6 +4,7 @@ namespace Art\ChatAi\Rest\Admin;
 
 use Art\ChatAi\Rest\Admin\Operations\Additional;
 use Art\ChatAi\Rest\Admin\Operations\Additionals;
+use Art\ChatAi\Rest\Admin\Operations\ChangeKey;
 use Art\ChatAi\Rest\Admin\Operations\Ping;
 use Art\ChatAi\Rest\Admin\Operations\Sync;
 use Art\ChatAi\Rest\Bootstrapper;
@@ -38,6 +39,12 @@ class Bootstrap extends Bootstrapper {
 			'additional',
 			Additional::class,
 			[ 'GET', 'POST', 'PUT', 'DELETE', ]
+		);
+
+		$router->register(
+			'change-key',
+			ChangeKey::class,
+			[ 'POST' ]
 		);
 	}
 }

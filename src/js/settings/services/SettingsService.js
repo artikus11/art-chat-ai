@@ -1,28 +1,32 @@
-import apiFetch from '@wordpress/api-fetch';
+import ApiService from './ApiService';
 
-class SettingsService {
-	static async getSettings() {
-		try {
-			const data = await apiFetch( { path: '/wp/v2/settings' } );
-			return data[ 'acai_settings' ] || {};
-		} catch ( error ) {
-			console.error( 'Ошибка загрузки настроек:', error );
-			throw error;
-		}
+class SettingsService extends ApiService {
+
+	constructor() {
+		super( '/wp/v2' );
+		this.SETTINGS_KEY = 'acai_settings';
 	}
 
-	static async saveSettings( settings ) {
+	async getSettings() {
+		const response = await this._makeRequest( {
+			endpoint: 'settings',
+			method: 'GET',
+			successMessage: 'Настройки загружены',
+		} );
 
-		try {
-			await apiFetch( {
-				path: '/wp/v2/settings',
-				method: 'POST',
-				data: { acai_settings: settings },
-			} );
-			return { success: true, message: 'Настройки сохранены!' };
-		} catch ( error ) {
-			return { success: false, message: 'Ошибка сохранения: ' + error.message };
+		if ( response.success ) {
+			return response.data[ this.SETTINGS_KEY ] || {};
 		}
+		throw new Error( response.message );
+	}
+
+	async saveSettings( settings ) {
+		return this._makeRequest( {
+			endpoint: 'settings',
+			method: 'POST',
+			successMessage: 'Настройки сохранены',
+			body: { [ this.SETTINGS_KEY ]: settings },
+		} );
 	}
 }
 

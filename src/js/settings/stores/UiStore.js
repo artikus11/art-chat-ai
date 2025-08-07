@@ -1,28 +1,28 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
 class UiStore {
-	isLoading = false;
-	isSaving = false;
-	isSyncing = false;
 	notices = [];
-
 	loadingStates = {
 		ping: false,
 		fetchAdditionals: false,
 		saveSettings: false,
 		sync: false,
+		changeKey: false,
 	};
 
-	constructor( rootStore ) {
+	constructor(rootStore) {
 		this.rootStore = rootStore;
-
-		makeAutoObservable( this );
+		makeAutoObservable(this, {}, { autoBind: true });
 	}
 
+
 	setLoading(key, value) {
-		runInAction(() => {
-			this.loadingStates = { ...this.loadingStates, [key]: value };
-		});
+		this.loadingStates = { ...this.loadingStates, [key]: value };
+	}
+
+
+	get isLoading() {
+		return Object.values(this.loadingStates).some(Boolean);
 	}
 
 	get isLoadingPing() {
@@ -41,39 +41,44 @@ class UiStore {
 		return this.loadingStates.sync;
 	}
 
-	setSaving = ( state ) => {
-		this.isSaving = state;
-	};
+	get isChangingKey() {
+		return this.loadingStates.changeKey;
+	}
 
-	setSyncing = ( state ) => {
-		this.isSyncing = state;
-	};
 
-	addNotice = ( type, message, duration = 5000 ) => {
+	addNotice(type, message, duration = 5000) {
 		const id = Date.now();
-		this.notices.push( { id, type, message } );
+		this.notices.push({ id, type, message });
 
-		setTimeout( () => {
-			this.removeNotice( id );
-		}, duration );
+		setTimeout(() => this.removeNotice(id), duration);
 	}
 
-	removeNotice = ( id ) => {
-		this.notices = this.notices.filter( notice => notice.id !== id );
+	removeNotice(id) {
+		this.notices = this.notices.filter(notice => notice.id !== id);
 	}
 
-	setSuccess = ( message ) => {
-		this.addNotice( 'success', message );
+	showSuccess(message) {
+		this.addNotice('success', message);
 	}
 
-	setError = ( message ) => {
-		this.addNotice( 'error', message );
+	showError(message) {
+		this.addNotice('error', message);
 	}
 
-	reset = () => {
-		this.isLoading = false;
-		this.isSaving = false;
+
+	showNotification({ type = 'info', message, duration }) {
+		this.addNotice(type, message, duration);
+	}
+
+	reset() {
 		this.notices = [];
+		this.loadingStates = {
+			ping: false,
+			fetchAdditionals: false,
+			saveSettings: false,
+			sync: false,
+			changeKey: false,
+		};
 	}
 }
 

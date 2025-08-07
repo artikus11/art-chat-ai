@@ -160,7 +160,10 @@ class Client {
 				return [
 					'success' => false,
 					'message' => 'Не удалось получить список additional файлов: ' . $result['message'],
-					'data'    => [],
+					'data'    => [
+						'action' => 'ensure_failed_additionals',
+						'exists' => false,
+					],
 				];
 			}
 
@@ -170,7 +173,10 @@ class Client {
 				return [
 					'success' => false,
 					'message' => 'Некорректный ответ от API: ожидался массив файлов',
-					'data'    => [],
+					'data'    => [
+						'action' => 'ensure_failed_error_api',
+						'exists' => false,
+					],
 				];
 			}
 
@@ -231,6 +237,10 @@ class Client {
 		$ensure = $this->ensure_additional_file_exists( $file_name );
 
 		if ( ! $ensure['success'] ) {
+			return $ensure;
+		}
+
+		if ( $ensure['data']['action'] === 'ensure_skipped' ) {
 			return $ensure;
 		}
 
@@ -372,6 +382,79 @@ class Client {
 			'data'    => [
 				'update'     => $update_result['data'],
 				'regenerate' => $regenerate_result['data'],
+			],
+		];
+	}
+
+
+	/**
+	 * Смена API-ключа на сервере и сохранение нового ключа в настройках WordPress.
+	 * Перед сменой проверяет, что старый ключ валиден.
+	 *
+	 * @param  string|null $new_key Новый ключ. Если null — будет сгенерирован.
+	 *
+	 * @return array ['success' => bool, 'message' => string, 'data' => ['new_key' => string]]
+	 */
+	public function change_api_key( ?string $new_key = null ): array {
+
+		if ( $this->api_key === null ) {
+			return [
+				'success' => false,
+				'message' => 'Невозможно сменить ключ: текущий API-ключ не установлен',
+			];
+		}
+
+		$auth_check = $this->get_ping();
+
+		if ( ! $auth_check['success'] ) {
+			return [
+				'success' => false,
+				'message' => 'Текущий API-ключ недействителен или не авторизован',
+				'details' => $auth_check['message'],
+			];
+		}
+
+		$this->update_setting( 'oldApiKey', $this->api_key );
+
+		if ( $new_key === null ) {
+			$new_key = $this->generate_api_key();
+		}
+
+		$result = $this->post(
+			'/settings/key',
+			[],
+			[
+				'key' => $new_key,
+			]
+		);
+
+		if ( ! $result['success'] ) {
+			return [
+				'success' => false,
+				'message' => 'Не удалось сменить ключ на сервере: ' . ( $result['message'] ?? 'Неизвестная ошибка' ),
+			];
+		}
+
+		$wp_update_result = $this->update_setting( 'apiKey', $new_key );
+
+		if ( ! $wp_update_result['success'] ) {
+			return [
+				'success' => false,
+				'message' => 'Ключ изменён на сервере, но не удалось сохранить в WordPress: ' . $wp_update_result['message'],
+			];
+		}
+
+		$this->api_key = $new_key;
+
+		$this->cached_additional_files = null;
+
+		error_log( "ChatAI API Key успешно обновлён. Новый ключ: " . $new_key );
+
+		return [
+			'success' => true,
+			'message' => 'API-ключ успешно изменён и сохранён в настройках',
+			'data'    => [
+				'new_key' => $new_key,
 			],
 		];
 	}
@@ -542,7 +625,6 @@ class Client {
 			];
 		}
 
-
 		$error_message = $this->parse_error_message( $body, $code );
 
 		return [
@@ -590,5 +672,55 @@ class Client {
 	private function is_success_status( int $status ): bool {
 
 		return $status >= 200 && $status < 300;
+	}
+
+
+	/**
+	 * Генерирует безопасный API-ключ
+	 *
+	 * @param  int $length Длина ключа (по умолчанию 32)
+	 *
+	 * @return string
+	 */
+	private function generate_api_key( int $length = 32 ): string {
+
+		return wp_generate_password( $length, false );
+	}
+
+
+	/**
+	 * Обновляет настройку WordPress через REST API /wp/v2/settings
+	 *
+	 * @param  string $setting_key   Ключ настройки (например, 'apiKey')
+	 * @param  mixed  $setting_value Значение
+	 *
+	 * @return array ['success' => bool, 'message' => string]
+	 */
+	private function update_setting( string $setting_key, mixed $setting_value ): array {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return [
+				'success' => false,
+				'message' => 'Недостаточно прав',
+			];
+		}
+
+		$settings = get_option( 'acai_settings', [] );
+
+		$settings[ $setting_key ] = $setting_value;
+
+		$updated = update_option( 'acai_settings', $settings );
+
+		if ( ! $updated ) {
+			return [
+				'success' => false,
+				'message' => 'Не удалось сохранить настройку в БД',
+			];
+		}
+
+		return [
+			'success' => true,
+			'message' => 'Настройка успешно обновлена',
+		];
 	}
 }
