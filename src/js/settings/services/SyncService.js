@@ -70,6 +70,15 @@ class SyncService extends ApiService {
 			successMessage: 'Ключ успешно изменен',
 		} );
 	}
+
+	async resetKey() {
+
+		return this._makeRequest( {
+			endpoint: 'reset-key',
+			method: 'POST',
+			successMessage: 'Ключ успешно сброшен',
+		} );
+	}
 }
 
 export default SyncService;

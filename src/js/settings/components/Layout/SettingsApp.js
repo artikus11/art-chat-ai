@@ -11,6 +11,7 @@ import AppearanceTab from '../Tabs/AppearanceTab';
 import SaveButton from '../Buttons/SaveButton';
 import SettingsTabPanel from '../Tabs/TabPanel';
 import SkeletonLoader from '../Skeleton/SkeletonLoader';
+import GlobalModal from './GlobalModal';
 
 const SettingsApp = observer( () => {
 	const { settingsStore, uiStore } = useStores();
@@ -58,6 +59,7 @@ const SettingsApp = observer( () => {
 				</PanelBody>
 			</Panel>
 
+			<GlobalModal />
 			{ notices.map( notice => (
 				<Snackbar key={ notice.id } className={ `acai-snackbar acai-snackbar--${ notice.type }` }>
 					{ notice.message }

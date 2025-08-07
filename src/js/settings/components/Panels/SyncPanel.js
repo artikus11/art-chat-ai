@@ -3,8 +3,8 @@ import { useStores } from '../../stores/RootStoreContext';
 import { PanelBody, PanelRow } from '@wordpress/components';
 import PingButton from '../Buttons/PingButton';
 import SyncButton from '../Buttons/SyncButton';
-import AdditionalsButton from '../Buttons/AdditionalsButton';
 import ChangeKeyButton from '../Buttons/ChangeKeyButton';
+import ResetKeyButton from '../Buttons/ResetKeyButton';
 
 const SyncPanel = observer( () => {
 	const { uiStore, syncStore } = useStores();
@@ -19,15 +19,9 @@ const SyncPanel = observer( () => {
 						isLoading={ isSyncing }
 					/>
 
-					{/*<AdditionalsButton
-					 onClick={() => syncStore.getAllAdditionals()}
-					 isLoading={isLoadingAdditionals}
-					 />*/ }
 					<div className="acai-settings-row">
-						<ChangeKeyButton
-							onClick={ () => syncStore.changeKey() }
-							isLoading={ isChangingKey }
-						/>
+						<ResetKeyButton />
+						{/*<ChangeKeyButton />*/}
 						<PingButton
 							onClick={ () => syncStore.ping() }
 							isLoading={ isLoadingPing }
