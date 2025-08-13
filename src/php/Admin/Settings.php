@@ -97,6 +97,11 @@ class Settings {
 					'default'     => '1111111111111111',
 					'description' => 'Дополнительные правила поведения чата (текст)',
 				],
+				'showChat'   => [
+					'type'        => 'boolean',
+					'default'     => false,
+					'description' => 'Включить чат',
+				],
 				'chatPosition' => [
 					'type'        => 'string',
 					'default'     => 'right',
@@ -211,6 +216,7 @@ class Settings {
 					$sanitized[ $key ] = preg_match( $hex_pattern, $value ) ? $value : $default;
 					break;
 
+				case 'showChat':
 				case 'showAvatar':
 					$sanitized[ $key ] = rest_sanitize_value_from_schema( $value, [ 'type' => 'boolean' ], $key );
 					break;

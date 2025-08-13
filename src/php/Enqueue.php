@@ -23,9 +23,9 @@ class Enqueue {
 	}
 
 
-	public function public_style() {
+	public function public_style(): void {
 
-		wp_enqueue_style(
+		wp_register_style(
 			$this->get_prefix() . '-public-style',
 			sprintf(
 				'%s/css/public-style%s.css',
@@ -40,7 +40,7 @@ class Enqueue {
 
 	public function public_scripts(): void {
 
-		wp_enqueue_script(
+		wp_register_script(
 			$this->get_prefix() . '-public-script',
 			sprintf(
 				'%s/js/public-script%s.js',
@@ -54,14 +54,13 @@ class Enqueue {
 				'strategy'  => 'defer',
 			]
 		);
-
-		wp_localize_script(
+		/*wp_localize_script(
 			'awpo-public-script',
 			'awpo_scripts_settings',
 			[
 				'required_text' => 'Опция обязательна. Пожалуйста выберите нужное значение',
 			]
-		);
+		);*/
 	}
 
 
@@ -86,7 +85,6 @@ class Enqueue {
 			true
 		);
 
-
 		$settings_instance = new Settings( $this->main );
 
 		wp_localize_script(
@@ -96,10 +94,10 @@ class Enqueue {
 				'defaults'   => Settings::get_defaults(),
 				'current'    => $settings_instance->get(),
 				'optionName' => $settings_instance->get_option_name(),
-				'version' => $this->main->get_utils()->get_plugin_version(),
+				'version'    => $this->main->get_utils()->get_plugin_version(),
 				'rest'       => [
-					'root' => esc_url_raw( rest_url() ),
-					'nonce'   => wp_create_nonce( 'wp_rest' ),
+					'root'  => esc_url_raw( rest_url() ),
+					'nonce' => wp_create_nonce( 'wp_rest' ),
 				],
 			]
 		);

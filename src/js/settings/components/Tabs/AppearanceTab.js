@@ -9,7 +9,7 @@ class AppearanceTab extends wp.element.Component {
 
 		return (
 			<PanelBody title="Настройки внешнего вида" initialOpen={ true }>
-				<SelectInput
+				{/*<SelectInput
 					label="Расположение окна чата"
 					value={ settings.chatPosition }
 					onChange={ ( value ) => updateSetting( 'chatPosition', value ) }
@@ -27,6 +27,11 @@ class AppearanceTab extends wp.element.Component {
 					label="Показывать аватар"
 					checked={ settings.showAvatar }
 					onChange={ ( value ) => updateSetting( 'showAvatar', value ) }
+				/>*/}
+				<ToggleInput
+					label="Включить чат"
+					checked={ settings.showChat }
+					onChange={ ( value ) => updateSetting( 'showChat', value ) }
 				/>
 			</PanelBody>
 		);

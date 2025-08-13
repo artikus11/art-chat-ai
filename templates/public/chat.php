@@ -1,3 +1,8 @@
+<?php
+/**
+ *
+ */
+?>
 <div class="chatbox" id="chat-container">
 	<button class="chatbox__toggle">
 		<span class="chatbox__toggle-avatar"></span>
