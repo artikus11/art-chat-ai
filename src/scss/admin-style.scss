@@ -10,6 +10,19 @@
       display: flex;
       gap: media-mixin.rem(12);
     }
+
+    &-grid {
+      display: grid;
+      column-gap: media-mixin.rem(12);
+
+      &.columns-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      &.columns-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
   }
 
   &-progress-bar {

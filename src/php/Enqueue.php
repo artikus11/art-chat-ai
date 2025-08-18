@@ -3,6 +3,7 @@
 namespace Art\ChatAi;
 
 use Art\ChatAi\Admin\Settings;
+use Art\ChatAi\Helpers\Helper;
 
 class Enqueue {
 
@@ -35,6 +36,22 @@ class Enqueue {
 			[],
 			$this->get_version(),
 		);
+
+		$this->generate_css();
+	}
+
+
+	public function generate_css(): void {
+
+		$accent_chat_color = Helper::get_option( 'accentChatColor' );
+
+		$css = "
+			    :root {
+			        --acai-accent-color: $accent_chat_color;
+			    }
+		    ";
+
+		wp_add_inline_style( $this->get_prefix() . '-public-style', $css );
 	}
 
 
@@ -54,13 +71,16 @@ class Enqueue {
 				'strategy'  => 'defer',
 			]
 		);
-		/*wp_localize_script(
-			'awpo-public-script',
-			'awpo_scripts_settings',
+
+		wp_localize_script(
+			$this->get_prefix() . '-public-script',
+			'acaiPublicSettings',
 			[
-				'required_text' => 'Опция обязательна. Пожалуйста выберите нужное значение',
+				'urlApi'      => Helper::get_option( 'urlApi' ),
+				'domainApi'   => Helper::get_option( 'domainApi' ),
+				'greetingApi' => Helper::get_option( 'greetingApi' ),
 			]
-		);*/
+		);
 	}
 
 

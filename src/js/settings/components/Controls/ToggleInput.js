@@ -1,11 +1,14 @@
 import { ToggleControl } from '@wordpress/components';
 
-const ToggleInput = ({ label, checked, onChange }) => (
+const ToggleInput = ( { label, checked, onChange } ) => (
 	<ToggleControl
-		label={label}
-		checked={checked}
-		onChange={onChange}
+		__nextHasNoMarginBottom={ true }
+		label={ label }
+		checked={ checked }
+		onChange={ onChange }
+		className="acai-field"
 	/>
+
 );
 
 export default ToggleInput;

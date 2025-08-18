@@ -3,13 +3,32 @@
 @use "media-mixin";
 
 .chatbox {
+  &__send-button {
+    background: var(--acai-accent-color);
+  }
+
+  &__header {
+    background: var(--acai-accent-color);
+  }
+
+  &__send-button {
+    background: var(--acai-accent-color);
+
+    &:focus,
+    &:hover,
+    &:disabled {
+      opacity: 0.3;
+      background: var(--acai-accent-color);
+    }
+
+  }
 
   &__toggle {
     bottom: media-mixin.rem(20);
     right: variables.$chat-offset-right;
     width: media-mixin.rem(73);
     height: media-mixin.rem(73);
-    background: variables.$primary-color;
+    background: var(--acai-accent-color);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -19,6 +38,15 @@
     transition: all 0.3s ease;
     padding: media-mixin.rem(2);
 
+    @include media-mixin.max_480 {
+      width: media-mixin.rem(45);
+      height: media-mixin.rem(45);
+    }
+
+    &:hover {
+      background: var(--acai-accent-color);
+    }
+
     &-avatar {
       width: media-mixin.rem(75);
       height: media-mixin.rem(75);
@@ -27,12 +55,13 @@
       background: url('../images/avatar.jpg') no-repeat center;
       background-size: cover;
       border-radius: 50%;
-    }
 
-    &:hover {
-      background: color.adjust(variables.$primary-color, $lightness: -10%);
+      @include media-mixin.max_480 {
+        width: media-mixin.rem(42);
+        height: media-mixin.rem(42);
+      }
     }
-
   }
 }
+
 

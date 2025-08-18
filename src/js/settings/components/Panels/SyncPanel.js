@@ -11,26 +11,24 @@ const SyncPanel = observer( () => {
 	const { isLoadingPing, isSyncing, isChangingKey } = uiStore;
 
 	return (
-		<>
-			<PanelBody title="Синхронизация с API" initialOpen={ true }>
-				<PanelRow>
-					<SyncButton
-						onClick={ () => syncStore.sync() }
-						isLoading={ isSyncing }
+		<PanelBody title="Синхронизация с API" initialOpen={ true }>
+			<PanelRow>
+				<SyncButton
+					onClick={ () => syncStore.sync() }
+					isLoading={ isSyncing }
+				/>
+
+				<div className="acai-settings-row">
+					<ResetKeyButton/>
+					{/*<ChangeKeyButton />*/ }
+					<PingButton
+						onClick={ () => syncStore.ping() }
+						isLoading={ isLoadingPing }
 					/>
+				</div>
 
-					<div className="acai-settings-row">
-						<ResetKeyButton />
-						{/*<ChangeKeyButton />*/}
-						<PingButton
-							onClick={ () => syncStore.ping() }
-							isLoading={ isLoadingPing }
-						/>
-					</div>
-
-				</PanelRow>
-			</PanelBody>
-		</>
+			</PanelRow>
+		</PanelBody>
 	);
 } );
 

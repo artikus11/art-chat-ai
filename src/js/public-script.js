@@ -1,11 +1,13 @@
-﻿import AIChat from '@artikus13/ai-chat-widget';
+﻿/*global acaiPublicSettings */
+import AIChat from '@artikus13/ai-chat-widget';
 import '@artikus13/ai-chat-widget/dist/chat.css';
 
 new AIChat(
 	{
 		apiOptions: {
-			url: 'https://chat.varman.pro/api/chat',
-			greeting: 'Привет! Чем могу помочь?'
+			url: acaiPublicSettings.urlApi,
+			domain: acaiPublicSettings.domainApi,
+			greeting: acaiPublicSettings.greetingApi
 		},
 		themeOptions: {
 			color: '#fff',

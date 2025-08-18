@@ -1,7 +1,10 @@
 <?php
 /**
  *
+ * @global $args
  */
+
+$header_chat_text = $args['options']['headerChatText'] ?? '';
 ?>
 <div class="chatbox" id="chat-container">
 	<button class="chatbox__toggle">
@@ -10,7 +13,7 @@
 
 	<div class="chatbox__wrapper">
 		<div class="chatbox__header">
-			<span></span>
+			<span><?php echo esc_html($header_chat_text);?></span>
 			<button class="chatbox__close"></button>
 		</div>
 		<div class="chatbox__messages-inner"></div>

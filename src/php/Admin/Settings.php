@@ -82,7 +82,7 @@ class Settings {
 		self::$schema = [
 			'type'       => 'object',
 			'properties' => [
-				'apiKey'       => [
+				'apiKey'          => [
 					'type'        => 'string',
 					'default'     => '123',
 					'description' => 'API-ключ для авторизации в чате Varman',
@@ -92,29 +92,60 @@ class Settings {
 					'default'     => '',
 					'description' => '',
 				],
-				'extraRules'   => [
+				'urlApi'          => [
 					'type'        => 'string',
-					'default'     => '1111111111111111',
+					'default'     => '',
+					'description' => '',
+				],
+				'domainApi'       => [
+					'type'        => 'string',
+					'default'     => '',
+					'description' => '',
+				],
+				'greetingApi'     => [
+					'type'        => 'string',
+					'default'     => '',
+					'description' => '',
+				],
+				'extraRules'      => [
+					'type'        => 'string',
+					'default'     => '',
 					'description' => 'Дополнительные правила поведения чата (текст)',
 				],
-				'showChat'   => [
+				'showChat'        => [
 					'type'        => 'boolean',
 					'default'     => false,
 					'description' => 'Включить чат',
 				],
-				'chatPosition' => [
+				'headerText'      => [
+					'type'        => 'string',
+					'default'     => '',
+					'description' => 'Заголовок чата',
+				],
+				'headerChatText'  => [
+					'type'        => 'string',
+					'default'     => '',
+					'description' => 'Заголовок чата',
+				],
+				'chatPosition'    => [
 					'type'        => 'string',
 					'default'     => 'right',
 					'enum'        => [ 'left', 'right' ],
 					'description' => 'Расположение окна чата на экране',
 				],
-				'chatColor'    => [
+				'chatColor'       => [
 					'type'        => 'string',
 					'default'     => '#007cba',
 					'pattern'     => '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
 					'description' => 'Цвет чата в формате HEX',
 				],
-				'showAvatar'   => [
+				'accentChatColor' => [
+					'type'        => 'string',
+					'default'     => '#f00075',
+					'pattern'     => '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+					'description' => 'Акцентный цвет',
+				],
+				'showAvatar'      => [
 					'type'        => 'boolean',
 					'default'     => true,
 					'description' => 'Показывать аватар в чате',
@@ -200,6 +231,10 @@ class Settings {
 			switch ( $key ) {
 				case 'apiKey':
 				case 'oldApiKey':
+				case 'urlApi':
+				case 'domainApi':
+				case 'greetingApi':
+				case 'headerChatText':
 					$sanitized[ $key ] = sanitize_text_field( $value );
 					break;
 
@@ -212,6 +247,7 @@ class Settings {
 					break;
 
 				case 'chatColor':
+				case 'accentChatColor':
 					$hex_pattern       = '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/';
 					$sanitized[ $key ] = preg_match( $hex_pattern, $value ) ? $value : $default;
 					break;
