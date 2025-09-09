@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Art\\ChatAi\\Admin\\Settings' => $baseDir . '/src/php/Admin/Settings.php',
+    'Art\\ChatAi\\Admin\\SettingsSanitizer' => $baseDir . '/src/php/Admin/SettingsSanitizer.php',
+    'Art\\ChatAi\\Admin\\SettingsSchema' => $baseDir . '/src/php/Admin/SettingsSchema.php',
     'Art\\ChatAi\\Api\\Client' => $baseDir . '/src/php/Api/Client.php',
     'Art\\ChatAi\\Api\\Operation' => $baseDir . '/src/php/Api/Operation.php',
     'Art\\ChatAi\\Enqueue' => $baseDir . '/src/php/Enqueue.php',
@@ -18,6 +20,7 @@ return array(
     'Art\\ChatAi\\Rest\\Admin\\Bootstrap' => $baseDir . '/src/php/Rest/Admin/Bootstrap.php',
     'Art\\ChatAi\\Rest\\Admin\\Operations\\Additional' => $baseDir . '/src/php/Rest/Admin/Operations/Additional.php',
     'Art\\ChatAi\\Rest\\Admin\\Operations\\Additionals' => $baseDir . '/src/php/Rest/Admin/Operations/Additionals.php',
+    'Art\\ChatAi\\Rest\\Admin\\Operations\\ChangeKey' => $baseDir . '/src/php/Rest/Admin/Operations/ChangeKey.php',
     'Art\\ChatAi\\Rest\\Admin\\Operations\\Ping' => $baseDir . '/src/php/Rest/Admin/Operations/Ping.php',
     'Art\\ChatAi\\Rest\\Admin\\Operations\\Sync' => $baseDir . '/src/php/Rest/Admin/Operations/Sync.php',
     'Art\\ChatAi\\Rest\\Bootstrapper' => $baseDir . '/src/php/Rest/Bootstrapper.php',

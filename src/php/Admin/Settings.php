@@ -10,23 +10,38 @@ class Settings {
 	protected ?Main $main;
 
 
-	private static array $schema = [];
-
-
-	private static array $defaults = [];
-
-
 	protected string $option_name;
 
 
 	protected string $option_group;
 
 
+	protected string $prefix;
+
+
+	/**
+	 * @var \Art\ChatAi\Admin\SettingsSchema
+	 */
+	protected SettingsSchema $settings_schema;
+
+
+	/**
+	 * @var \Art\ChatAi\Admin\SettingsSanitizer
+	 */
+	protected SettingsSanitizer $settings_sanitizer;
+
+
 	public function __construct( Main $main ) {
 
-		$this->main         = $main;
-		$this->option_name  = $this->main->get_utils()->get_plugin_prefix() . '_settings';
-		$this->option_group = $this->main->get_utils()->get_plugin_prefix() . '_general_settings';
+		$this->main = $main;
+
+		$this->prefix = $this->main->get_utils()->get_plugin_prefix();
+
+		$this->option_name  = "{$this->prefix}_settings";
+		$this->option_group = "{$this->prefix}_general_settings";
+
+		$this->settings_schema    = new SettingsSchema();
+		$this->settings_sanitizer = new SettingsSanitizer();
 	}
 
 
@@ -45,7 +60,7 @@ class Settings {
 			'ChatBot Настройки',
 			'ChatBot',
 			'manage_options',
-			$this->main->get_utils()->get_plugin_prefix() . '-settings',
+			"$this->prefix-settings",
 			[ $this, 'render_page' ]
 		);
 	}
@@ -58,128 +73,6 @@ class Settings {
 			true,
 			[]
 		);
-	}
-
-
-	/**
-	 * Получить схему настроек для REST API.
-	 *
-	 * Схема описывает структуру данных, валидацию и дефолты.
-	 * Используется в register_setting() для show_in_rest.
-	 *
-	 * @return array {
-	 * @type string $type       Тип: 'object'
-	 * @type array  $properties Поля настроек
-	 *                          }
-	 * @since 1.0.0
-	 */
-	public static function get_schema(): array {
-
-		if ( ! empty( self::$schema ) ) {
-			return self::$schema;
-		}
-
-		self::$schema = [
-			'type'       => 'object',
-			'properties' => [
-				'apiKey'          => [
-					'type'        => 'string',
-					'default'     => '123',
-					'description' => 'API-ключ для авторизации в чате Varman',
-				],
-				'oldApiKey'       => [
-					'type'        => 'string',
-					'default'     => '',
-					'description' => '',
-				],
-				'urlApi'          => [
-					'type'        => 'string',
-					'default'     => '',
-					'description' => '',
-				],
-				'domainApi'       => [
-					'type'        => 'string',
-					'default'     => '',
-					'description' => '',
-				],
-				'greetingApi'     => [
-					'type'        => 'string',
-					'default'     => '',
-					'description' => '',
-				],
-				'extraRules'      => [
-					'type'        => 'string',
-					'default'     => '',
-					'description' => 'Дополнительные правила поведения чата (текст)',
-				],
-				'showChat'        => [
-					'type'        => 'boolean',
-					'default'     => false,
-					'description' => 'Включить чат',
-				],
-				'headerText'      => [
-					'type'        => 'string',
-					'default'     => '',
-					'description' => 'Заголовок чата',
-				],
-				'headerChatText'  => [
-					'type'        => 'string',
-					'default'     => '',
-					'description' => 'Заголовок чата',
-				],
-				'chatPosition'    => [
-					'type'        => 'string',
-					'default'     => 'right',
-					'enum'        => [ 'left', 'right' ],
-					'description' => 'Расположение окна чата на экране',
-				],
-				'chatColor'       => [
-					'type'        => 'string',
-					'default'     => '#007cba',
-					'pattern'     => '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
-					'description' => 'Цвет чата в формате HEX',
-				],
-				'accentChatColor' => [
-					'type'        => 'string',
-					'default'     => '#f00075',
-					'pattern'     => '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
-					'description' => 'Акцентный цвет',
-				],
-				'showAvatar'      => [
-					'type'        => 'boolean',
-					'default'     => true,
-					'description' => 'Показывать аватар в чате',
-				],
-			],
-		];
-
-		return self::$schema;
-	}
-
-
-	/**
-	 * Получить ассоциативный массив дефолтных значений.
-	 *
-	 * Дефолты извлекаются из схемы, чтобы не дублировать данные.
-	 *
-	 * @return array
-	 * @since 1.0.0
-	 */
-	public static function get_defaults(): array {
-
-		if ( ! empty( self::$defaults ) ) {
-			return self::$defaults;
-		}
-
-		$schema = self::get_schema();
-
-		self::$defaults = [];
-
-		foreach ( $schema['properties'] as $key => $prop ) {
-			self::$defaults[ $key ] = $prop['default'];
-		}
-
-		return self::$defaults;
 	}
 
 
@@ -200,10 +93,22 @@ class Settings {
 				'description'       => 'Настройки интеграции с Varman Chat',
 				'sanitize_callback' => [ $this, 'sanitize_settings' ],
 				'show_in_rest'      => [
-					'schema' => self::get_schema(),
+					'schema' => $this->get_schema(),
 				],
 			]
 		);
+	}
+
+
+	public function get_schema(): array {
+
+		return $this->settings_schema->get_rest_schema();
+	}
+
+
+	public function get_defaults(): array {
+
+		return $this->settings_schema->get_defaults();
 	}
 
 
@@ -217,52 +122,11 @@ class Settings {
 	 */
 	public function sanitize_settings( array $input ): array {
 
-		$sanitized = [];
-		$defaults  = self::get_defaults();
-
-		foreach ( $defaults as $key => $default ) {
-			if ( ! isset( $input[ $key ] ) ) {
-				$sanitized[ $key ] = $default;
-				continue;
-			}
-
-			$value = $input[ $key ];
-
-			switch ( $key ) {
-				case 'apiKey':
-				case 'oldApiKey':
-				case 'urlApi':
-				case 'domainApi':
-				case 'greetingApi':
-				case 'headerChatText':
-					$sanitized[ $key ] = sanitize_text_field( $value );
-					break;
-
-				case 'extraRules':
-					$sanitized[ $key ] = sanitize_textarea_field( $value );
-					break;
-
-				case 'chatPosition':
-					$sanitized[ $key ] = in_array( $value, [ 'left', 'right' ], true ) ? $value : $default;
-					break;
-
-				case 'chatColor':
-				case 'accentChatColor':
-					$hex_pattern       = '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/';
-					$sanitized[ $key ] = preg_match( $hex_pattern, $value ) ? $value : $default;
-					break;
-
-				case 'showChat':
-				case 'showAvatar':
-					$sanitized[ $key ] = rest_sanitize_value_from_schema( $value, [ 'type' => 'boolean' ], $key );
-					break;
-
-				default:
-					$sanitized[ $key ] = $default;
-			}
-		}
-
-		return $sanitized;
+		return $this->settings_sanitizer->sanitize(
+			$input,
+			$this->get_schema(),
+			$this->get_defaults()
+		);
 	}
 
 
@@ -276,7 +140,7 @@ class Settings {
 
 		$saved = get_option( $this->option_name, [] );
 
-		return wp_parse_args( $saved, self::get_defaults() );
+		return wp_parse_args( $saved, $this->get_defaults() );
 	}
 
 
@@ -301,4 +165,5 @@ class Settings {
 
 		return $this->option_name;
 	}
+
 }

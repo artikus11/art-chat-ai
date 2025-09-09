@@ -22,6 +22,8 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
 
     public static $classMap = array (
         'Art\\ChatAi\\Admin\\Settings' => __DIR__ . '/../..' . '/src/php/Admin/Settings.php',
+        'Art\\ChatAi\\Admin\\SettingsSanitizer' => __DIR__ . '/../..' . '/src/php/Admin/SettingsSanitizer.php',
+        'Art\\ChatAi\\Admin\\SettingsSchema' => __DIR__ . '/../..' . '/src/php/Admin/SettingsSchema.php',
         'Art\\ChatAi\\Api\\Client' => __DIR__ . '/../..' . '/src/php/Api/Client.php',
         'Art\\ChatAi\\Api\\Operation' => __DIR__ . '/../..' . '/src/php/Api/Operation.php',
         'Art\\ChatAi\\Enqueue' => __DIR__ . '/../..' . '/src/php/Enqueue.php',
@@ -33,6 +35,7 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
         'Art\\ChatAi\\Rest\\Admin\\Bootstrap' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Bootstrap.php',
         'Art\\ChatAi\\Rest\\Admin\\Operations\\Additional' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Operations/Additional.php',
         'Art\\ChatAi\\Rest\\Admin\\Operations\\Additionals' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Operations/Additionals.php',
+        'Art\\ChatAi\\Rest\\Admin\\Operations\\ChangeKey' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Operations/ChangeKey.php',
         'Art\\ChatAi\\Rest\\Admin\\Operations\\Ping' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Operations/Ping.php',
         'Art\\ChatAi\\Rest\\Admin\\Operations\\Sync' => __DIR__ . '/../..' . '/src/php/Rest/Admin/Operations/Sync.php',
         'Art\\ChatAi\\Rest\\Bootstrapper' => __DIR__ . '/../..' . '/src/php/Rest/Bootstrapper.php',
