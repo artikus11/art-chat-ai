@@ -18,7 +18,7 @@ class SettingsSchema {
 				'type'    => 'string',
 				'default' => '',
 			],
-			'url_chat'    => [
+			'url'    => [
 				'type'    => 'string',
 				'default' => '',
 			],

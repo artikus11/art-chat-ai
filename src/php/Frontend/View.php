@@ -2,8 +2,8 @@
 
 namespace Art\ChatAi\Frontend;
 
+use Art\ChatAi\Helpers\AssetHandle;
 use Art\ChatAi\Helpers\Helper;
-use Art\ChatAi\Helpers\Utils;
 use Art\ChatAi\Main;
 
 class View {
@@ -11,9 +11,14 @@ class View {
 	protected ?Main $main;
 
 
+	protected AssetHandle $asset_handle;
+
+
 	public function __construct( Main $main ) {
 
 		$this->main = $main;
+
+		$this->asset_handle = new AssetHandle( $this->main->get_utils()->get_plugin_prefix() );
 	}
 
 
@@ -46,8 +51,8 @@ class View {
 			return;
 		}
 
-		wp_enqueue_script( $this->main->get_utils()->get_plugin_prefix() . '-public-script' );
-		wp_enqueue_style( $this->main->get_utils()->get_plugin_prefix() . '-public-style' );
+		wp_enqueue_script( $this->asset_handle->get_handle( 'public_script' ) );
+		wp_enqueue_style( $this->asset_handle->get_handle( 'public_style' ) );
 	}
 
 
@@ -56,7 +61,7 @@ class View {
 	 */
 	protected function is_show_chat(): bool {
 
-		$show_chat = Helper::get_option( 'showChat' );
+		$show_chat = Helper::get_option( 'appearance', 'show_chat' );
 
 		if ( ! $show_chat ) {
 			return false;
