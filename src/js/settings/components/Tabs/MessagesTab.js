@@ -121,6 +121,14 @@ const MessagesTab = observer( ( { group } ) => {
 								step: 500,
 							},
 							{
+								type: 'range',
+								field: 'cooldownHours',
+								label: 'Кулдаун, часы',
+								min: 0,
+								max: 48,
+								step: 1,
+							},
+							{
 								type: 'toggle',
 								field: 'disable',
 								label: 'Отключить',
