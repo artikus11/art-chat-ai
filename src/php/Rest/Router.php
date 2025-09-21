@@ -7,7 +7,7 @@ use WP_REST_Request;
 
 class Router {
 
-	public function register( $route, $operation_class, $methods = [ 'POST' ], $permission = '__return_true' ): static {
+	public function register( $route, $operation_class, $methods = [ 'POST' ], $permission = '__return_true' ): Router {
 
 		register_rest_route(
 			Utils::get_plugin_prefix() . '/v1',

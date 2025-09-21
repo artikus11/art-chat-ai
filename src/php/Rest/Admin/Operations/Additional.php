@@ -15,17 +15,27 @@ class Additional extends Operation {
 		$file_name = $this->get_file_rules_name();
 		$rules     = $this->get_settings_rules();
 
-		$result = match ( $method ) {
-			'GET'    => $this->client->get_additional( $file_name ),
-			'POST'   => $this->client->add_additional( $rules, $file_name ),
-			'PUT'    => $this->client->update_additional( $rules, $file_name ),
-			'DELETE' => $this->client->delete_additional( $file_name ),
-			default  => [
-				'success' => false,
-				'message' => 'Метод не поддерживается',
-				'status'  => 405,
-			],
-		};
+		switch ( $method ) {
+			case 'GET':
+				$result = $this->client->get_additional( $file_name );
+				break;
+			case 'POST':
+				$result = $this->client->add_additional( $rules, $file_name );
+				break;
+			case 'PUT':
+				$result = $this->client->update_additional( $rules, $file_name );
+				break;
+			case 'DELETE':
+				$result = $this->client->delete_additional( $file_name );
+				break;
+			default:
+				$result = [
+					'success' => false,
+					'message' => 'Метод не поддерживается',
+					'status'  => 405,
+				];
+				break;
+		}
 
 		if ( $result['success'] ) {
 			return [
@@ -36,6 +46,7 @@ class Additional extends Operation {
 		}
 
 		$status = $result['status'] ?? 500;
+
 		throw new \Exception( $result['message'], $status );
 	}
 }
