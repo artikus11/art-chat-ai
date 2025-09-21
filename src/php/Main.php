@@ -4,7 +4,6 @@ namespace Art\ChatAi;
 
 use Art\ChatAi\Admin\Settings;
 use Art\ChatAi\Frontend\View;
-use Art\ChatAi\Helpers\Helper;
 use Art\ChatAi\Helpers\Templater;
 use Art\ChatAi\Helpers\Utils;
 use Art\ChatAi\Traits\SingletonTrait;

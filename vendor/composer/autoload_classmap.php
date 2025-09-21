@@ -13,7 +13,7 @@ return array(
     'Art\\ChatAi\\Api\\Operation' => $baseDir . '/src/php/Api/Operation.php',
     'Art\\ChatAi\\Enqueue' => $baseDir . '/src/php/Enqueue.php',
     'Art\\ChatAi\\Frontend\\View' => $baseDir . '/src/php/Frontend/View.php',
-    'Art\\ChatAi\\Helpers\\Helper' => $baseDir . '/src/php/Helpers/Helper.php',
+    'Art\\ChatAi\\Helpers\\AssetHandle' => $baseDir . '/src/php/Helpers/AssetHandle.php',
     'Art\\ChatAi\\Helpers\\Templater' => $baseDir . '/src/php/Helpers/Templater.php',
     'Art\\ChatAi\\Helpers\\Utils' => $baseDir . '/src/php/Helpers/Utils.php',
     'Art\\ChatAi\\Main' => $baseDir . '/src/php/Main.php',

@@ -4,7 +4,6 @@ namespace Art\ChatAi;
 
 use Art\ChatAi\Admin\Settings;
 use Art\ChatAi\Helpers\AssetHandle;
-use Art\ChatAi\Helpers\Helper;
 
 /**
  * Класс Enqueue отвечает за регистрацию и загрузку скриптов и стилей WordPress-плагина.
@@ -162,7 +161,7 @@ class Enqueue {
 	 */
 	protected function generate_css( string $handle ): void {
 
-		$accent_chat_color = Helper::get_option_appearance( 'accent_chat_color' );
+		$accent_chat_color = $this->get_option( 'appearance', 'accent_chat_color' );
 
 		if ( empty( $accent_chat_color ) ) {
 			return;

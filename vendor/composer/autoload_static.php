@@ -28,7 +28,7 @@ class ComposerStaticInit16285658e3c49cec3c1beb1ec2c9f004
         'Art\\ChatAi\\Api\\Operation' => __DIR__ . '/../..' . '/src/php/Api/Operation.php',
         'Art\\ChatAi\\Enqueue' => __DIR__ . '/../..' . '/src/php/Enqueue.php',
         'Art\\ChatAi\\Frontend\\View' => __DIR__ . '/../..' . '/src/php/Frontend/View.php',
-        'Art\\ChatAi\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/php/Helpers/Helper.php',
+        'Art\\ChatAi\\Helpers\\AssetHandle' => __DIR__ . '/../..' . '/src/php/Helpers/AssetHandle.php',
         'Art\\ChatAi\\Helpers\\Templater' => __DIR__ . '/../..' . '/src/php/Helpers/Templater.php',
         'Art\\ChatAi\\Helpers\\Utils' => __DIR__ . '/../..' . '/src/php/Helpers/Utils.php',
         'Art\\ChatAi\\Main' => __DIR__ . '/../..' . '/src/php/Main.php',

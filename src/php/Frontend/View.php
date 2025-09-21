@@ -3,7 +3,6 @@
 namespace Art\ChatAi\Frontend;
 
 use Art\ChatAi\Helpers\AssetHandle;
-use Art\ChatAi\Helpers\Helper;
 use Art\ChatAi\Main;
 
 class View {
