@@ -4,11 +4,15 @@
  * @global $args
  */
 
-$header_chat_text = $args['options']['headerChatText'] ?? '';
+$options = $args['options'];
+
+$header_chat_text = $options['appearance']['header_chat_text'] ?? '';
+
 ?>
 <div class="chatbox" id="chat-container" data-aichat-box>
 	<button class="chatbox__toggle" data-aichat-toggle aria-label="Открыть чат">
 		<span class="chatbox__toggle-avatar"></span>
+		<span class="chatbox__welcome-tip" data-aichat-welcome-tip></span>
 	</button>
 
 	<div class="chatbox__wrapper" data-aichat-wrapper>
