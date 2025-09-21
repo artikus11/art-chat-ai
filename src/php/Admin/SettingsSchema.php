@@ -114,6 +114,10 @@ class SettingsSchema {
 						'type'    => 'number',
 						'default' => 8000,
 					],
+					'cooldownHours' => [
+						'type'    => 'number',
+						'default' => 24,
+					],
 					'disable'  => [
 						'type'    => 'boolean',
 						'default' => false,

@@ -37,5 +37,3 @@ $header_chat_text = $options['appearance']['header_chat_text'] ?? '';
 			</button>
 	</div>
 </div>
-
-
