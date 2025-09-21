@@ -3,11 +3,53 @@
 @use "media-mixin";
 
 .chatbox {
-  &__send-button {
-    background: var(--acai-accent-color);
+  &__wrapper {
   }
 
   &__header {
+    background: var(--acai-accent-color);
+
+    @include media-mixin.max_480 {
+      padding: media-mixin.rem(8) media-mixin.rem(12);
+    }
+
+    span {
+      @include media-mixin.max_480 {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &__close {
+
+    @include media-mixin.max_480 {
+      width: 16px;
+      height: 16px;
+      padding: 0;
+    }
+
+  }
+
+  &__messages-inner {
+
+    @include media-mixin.max_480 {
+      gap: media-mixin.rem(8);
+    }
+  }
+
+  &__message-content {
+
+    @include media-mixin.max_480 {
+      font-size: 12px;
+    }
+  }
+
+  &__message-text ul.links__list,
+  &__message-text ol.links__list {
+    margin: 0;
+  }
+
+  &__send-button {
     background: var(--acai-accent-color);
   }
 
@@ -21,6 +63,22 @@
       background: var(--acai-accent-color);
     }
 
+  }
+
+  &__welcome-tip {
+    @include media-mixin.max_480 {
+      font-size: 12px;
+    }
+  }
+
+  &__textarea {
+    border: 1px solid var(--acai-accent-color);
+    opacity: 0.5;
+
+    &:focus {
+      border-color: var(--acai-accent-color);
+      opacity: 1;
+    }
   }
 
   &__toggle {

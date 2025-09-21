@@ -3,7 +3,7 @@
 .acai {
   &-settings {
     max-width: media-mixin.rem(900);
-    margin: 0 auto;
+    //margin: 0 auto;
     position: relative;
 
     &-row {
@@ -21,6 +21,10 @@
 
       &.columns-3 {
         grid-template-columns: repeat(3, 1fr);
+      }
+
+      &.columns-4 {
+        grid-template-columns: repeat(4, 1fr);
       }
     }
   }
