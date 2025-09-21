@@ -145,6 +145,33 @@ class Settings {
 
 
 	/**
+	 * Получить группу настроек по ключу.
+	 *
+	 * @param $group
+	 *
+	 * @return array|null
+	 */
+	public function get_option_group( $group ): ?array {
+
+		return $this->get()[ $group ] ?? null;
+	}
+
+
+	/**
+	 * Получить значение настройки по ключу.
+	 *
+	 * @param  string $group
+	 * @param  string $key
+	 *
+	 * @return mixed|null
+	 */
+	public function get_option( string $group, string $key ) {
+
+		return $this->get()[ $group ][ $key ] ?? null;
+	}
+
+
+	/**
 	 * Сохранить настройки (опционально, обычно через REST API).
 	 *
 	 * @param  array $data Данные для сохранения

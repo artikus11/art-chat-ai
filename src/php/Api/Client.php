@@ -10,6 +10,9 @@ class Client {
 	protected ?string $api_key;
 
 
+	protected ?string $domain;
+
+
 	private string $base_url;
 
 
@@ -25,7 +28,7 @@ class Client {
 	 *
 	 * @throws Exception Если URL невалидный
 	 */
-	public function __construct( ?string $api_key = null, string $base_url = 'https://chat.varman.pro', int $timeout = 60 ) {
+	public function __construct( ?string $api_key = null, ?string $domain = null, string $base_url = 'https://chat.varman.pro', int $timeout = 60 ) {
 
 		if ( ! filter_var( $base_url, FILTER_VALIDATE_URL ) ) {
 			throw new Exception( 'Неверный базовый URL API' );
@@ -34,10 +37,14 @@ class Client {
 		$this->base_url = rtrim( $base_url, '/' );
 		$this->timeout  = max( 1, $timeout );
 		$this->api_key  = $api_key;
+		$this->domain   = $domain;
 
-		// Проверяем, если ключ передан, но пустой
 		if ( $api_key !== null && trim( $api_key ) === '' ) {
 			throw new InvalidArgumentException( 'API-ключ не может быть пустым' );
+		}
+
+		if ( $domain !== null && trim( $domain ) === '' ) {
+			throw new InvalidArgumentException( 'Необходимо передать домен' );
 		}
 	}
 
@@ -414,7 +421,7 @@ class Client {
 			];
 		}
 
-		$this->update_setting( 'oldApiKey', $this->api_key );
+		$this->update_setting( 'old_api_key', $this->api_key );
 
 		if ( $new_key === null ) {
 			$new_key = $this->generate_api_key();
@@ -512,6 +519,10 @@ class Client {
 
 		if ( $this->api_key !== null ) {
 			$headers['X-API-Key'] = $this->api_key;
+		}
+
+		if ( $this->domain !== null ) {
+			$headers['X-API-DOMAIN'] = $this->domain;
 		}
 
 		return $headers;

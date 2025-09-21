@@ -6,35 +6,93 @@ use Art\ChatAi\Admin\Settings;
 use Art\ChatAi\Helpers\AssetHandle;
 use Art\ChatAi\Helpers\Helper;
 
+/**
+ * Класс Enqueue отвечает за регистрацию и загрузку скриптов и стилей WordPress-плагина.
+ *
+ * Управляет загрузкой ресурсов как на фронтенде, так и в админке.
+ * Использует WP_API для корректной интеграции с WordPress.
+ */
 class Enqueue {
 
+	/**
+	 * Экземпляр основного класса плагина.
+	 *
+	 * @var Main|null
+	 */
 	protected ?Main $main;
 
 
+	/**
+	 * Префикс плагина, используется для уникальности хендлов и объектов JS/PHP.
+	 *
+	 * @var string
+	 */
 	protected string $prefix;
 
 
+	/**
+	 * Версия плагина, используется для кэширования ассетов.
+	 *
+	 * @var string
+	 */
 	protected string $version;
 
 
+	/**
+	 * URL директории с ассетами плагина.
+	 *
+	 * @var string
+	 */
 	protected string $assets_url;
 
 
+	/**
+	 * Путь до директории с ассетами плагина.
+	 *
+	 * @var string
+	 */
 	protected string $assets_path;
 
 
+	/**
+	 * Суффикс для минифицированных файлов (`.min` или пустая строка).
+	 *
+	 * @var string
+	 */
 	protected string $suffix;
 
 
+	/**
+	 * Объект для генерации уникальных хендлов и имен объектов JS.
+	 *
+	 * @var AssetHandle
+	 */
 	protected AssetHandle $asset_handle;
 
 
+	/**
+	 * Кэш данных из asset.php файлов.
+	 *
+	 * @var array
+	 */
 	protected array $asset_data_cache = [];
 
 
+	/**
+	 * Данные из файла `js/settings.min.asset.php`.
+	 *
+	 * @var array
+	 */
 	protected array $asset_data;
 
 
+	/**
+	 * Конструктор класса Enqueue.
+	 *
+	 * Инициализирует основные параметры: префикс, версию, пути и суффиксы.
+	 *
+	 * @param  Main $main Экземпляр основного класса плагина.
+	 */
 	public function __construct( Main $main ) {
 
 		$this->main = $main;
@@ -53,6 +111,13 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Регистрирует хуки для загрузки скриптов и стилей.
+	 *
+	 * Хуки:
+	 * - admin_enqueue_scripts — для админки
+	 * - wp_enqueue_scripts    — для фронтенда
+	 */
 	public function init_hooks(): void {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_assets' ], 100 );
@@ -60,6 +125,9 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Загружает стили и скрипты для фронтенда.
+	 */
 	public function public_assets(): void {
 
 		$this->public_style();
@@ -67,6 +135,9 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Регистрирует и загружает стили для фронтенда.
+	 */
 	public function public_style(): void {
 
 		$handle = $this->asset_handle->get_handle( 'public_style' );
@@ -82,6 +153,13 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Генерирует CSS-переменные и добавляет их inline.
+	 *
+	 * Используется для темизации элементов чата.
+	 *
+	 * @param  string $handle Хендл зарегистрированного стиля.
+	 */
 	protected function generate_css( string $handle ): void {
 
 		$accent_chat_color = Helper::get_option_appearance( 'accent_chat_color' );
@@ -99,6 +177,11 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Регистрирует и загружает скрипты для фронтенда.
+	 *
+	 * Также передаёт настройки плагина в JS через wp_localize_script.
+	 */
 	public function public_scripts(): void {
 
 		$handle = $this->asset_handle->get_handle( 'public_script' );
@@ -119,34 +202,21 @@ class Enqueue {
 			$this->asset_handle->get_object_name( 'public_settings' ),
 			[
 				'api'      => [
-					'url'    => Helper::get_option_api( 'url' ),
-					'domain' => Helper::get_option_api( 'domain' ),
-					'debug'  => Helper::get_option_api( 'debug' ),
+					'url'    => $this->get_option( 'api', 'url' ),
+					'domain' => $this->get_option( 'api', 'domain' ),
 				],
-				'messages' => [
-					'greeting' => [
-						'text'  => Helper::get_option_messages( 'greeting_text' ),
-						'delay' => Helper::get_option_messages( 'greeting_delay' ),
-					],
-					'followup' => [
-						'text'  => Helper::get_option_messages( 'followup_text' ),
-						'delay' => Helper::get_option_messages( 'followup_delay' ),
-					],
-					'fallback' => [
-						'text'  => Helper::get_option_messages( 'fallback_text' ),
-						'delay' => Helper::get_option_messages( 'fallback_delay' ),
-					],
-					'error'    => [
-						'text'  => Helper::get_option_messages( 'error_text' ),
-						'delay' => Helper::get_option_messages( 'error_delay' ),
-					],
-
-				],
+				'general'  => $this->get_settings_general(),
+				'messages' => $this->get_settings_messages(),
 			]
 		);
 	}
 
 
+	/**
+	 * Загружает стили и скрипты для админки только на странице настроек.
+	 *
+	 * @param  string $hook_suffix Идентификатор текущей страницы админки.
+	 */
 	public function admin_assets( string $hook_suffix ): void {
 
 		if ( $hook_suffix !== "settings_page_$this->prefix-settings" ) {
@@ -158,6 +228,9 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Загружает скрипты для страницы настроек в админке.
+	 */
 	public function enqueue_admin_scripts(): void {
 
 		$handle = $this->asset_handle->get_handle( 'settings_script' );
@@ -170,15 +243,13 @@ class Enqueue {
 			true
 		);
 
-		$settings_instance = new Settings( $this->main );
-
 		wp_localize_script(
 			$handle,
 			$this->asset_handle->get_object_name( 'admin_settings' ),
 			[
-				'defaults'    => $settings_instance->get_defaults(),
-				'current'     => $settings_instance->get(),
-				'option_name' => $settings_instance->get_option_name(),
+				'defaults'    => $this->get_settings()->get_defaults(),
+				'current'     => $this->get_settings()->get(),
+				'option_name' => $this->get_settings()->get_option_name(),
 				'version'     => $this->version,
 				'rest'        => [
 					'root'  => esc_url_raw( rest_url() ),
@@ -189,6 +260,9 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Загружает стили для страницы настроек в админке.
+	 */
 	protected function enqueue_admin_styles(): void {
 
 		$handle = $this->asset_handle->get_handle( 'settings_style' );
@@ -204,6 +278,13 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Возвращает URL к указанному ассету с учётом суффикса и версии.
+	 *
+	 * @param  string $relative_path Относительный путь к файлу ассета.
+	 *
+	 * @return string Полный URL к файлу ассета.
+	 */
 	protected function get_asset_url( string $relative_path ): string {
 
 		$directory = dirname( $relative_path );
@@ -224,6 +305,13 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Получает данные из файла asset.php с кэшированием.
+	 *
+	 * @param  string $asset_file Путь к файлу asset.php.
+	 *
+	 * @return array Данные из файла или пустой массив.
+	 */
 	protected function get_cached_asset_data( string $asset_file ): array {
 
 		if ( ! isset( $this->asset_data_cache[ $asset_file ] ) ) {
@@ -234,10 +322,67 @@ class Enqueue {
 	}
 
 
+	/**
+	 * Получает данные из файла asset.php.
+	 *
+	 * @param  string $asset_file Путь к файлу asset.php.
+	 *
+	 * @return array Данные из файла или пустой массив.
+	 */
 	protected function get_asset_data( string $asset_file ): array {
 
 		$file_path = $this->assets_path . '/' . $asset_file;
 
 		return file_exists( $file_path ) ? include $file_path : [];
+	}
+
+
+	/**
+	 * Получает экземпляр класса настроек.
+	 *
+	 * @return \Art\ChatAi\Admin\Settings
+	 */
+	protected function get_settings(): Settings {
+
+		return $this->main->get_settings();
+	}
+
+
+	/**
+	 * Получает настройки сообщений.
+	 *
+	 * @return array
+	 */
+	protected function get_settings_messages(): array {
+
+		return $this->get_settings()->get_option_group( 'messages' );
+	}
+
+
+	/**
+	 * Получает основные настройки.
+	 *
+	 * @return array
+	 */
+	protected function get_settings_general(): array {
+
+		return $this->get_settings()->get_option_group( 'general' );
+	}
+
+
+	/**
+	 * Получает настройки API.
+	 *
+	 * @return array
+	 */
+	protected function get_settings_api(): array {
+
+		return $this->get_settings()->get_option_group( 'api' );
+	}
+
+
+	protected function get_option( string $group, string $key ) {
+
+		return $this->get_settings()->get_option( $group, $key );
 	}
 }

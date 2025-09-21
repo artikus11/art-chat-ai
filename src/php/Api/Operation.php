@@ -2,6 +2,7 @@
 
 namespace Art\ChatAi\Api;
 
+use Art\ChatAi\Main;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -10,10 +11,13 @@ abstract class Operation {
 	protected WP_REST_Request $request;
 
 
+	protected Client $client;
+
+
 	protected ?string $api_key = null;
 
 
-	protected Client $client;
+	protected ?string $domain = null;
 
 
 	public function __construct( WP_REST_Request $request ) {
@@ -47,6 +51,7 @@ abstract class Operation {
 	protected function validate_request(): void {
 
 		$this->api_key = $this->get_api_key();
+		$this->domain  = $this->get_domain();
 
 		if ( empty( $this->api_key ) ) {
 			throw new \Exception( 'API-ключ не задан' );
@@ -59,7 +64,7 @@ abstract class Operation {
 	 */
 	protected function init_client(): void {
 
-		$this->client = new Client( $this->api_key );
+		$this->client = new Client( $this->api_key, $this->domain );
 	}
 
 
@@ -81,27 +86,39 @@ abstract class Operation {
 	/**
 	 * @return false|mixed|null
 	 */
-	protected function get_settings(): mixed {
+	protected function get_settings( $group, $name ) {
 
-		return get_option( 'acai_settings', [] );
+		$settings = Main::instance()->get_settings();
+
+		return $settings->get_option( $group, $name );
 	}
 
 
 	protected function get_api_key() {
 
-		$settings = $this->get_settings();
+		return $this->get_settings( 'api', 'api_key' ) ?? '';
+	}
 
-		return $settings['apiKey'] ?? '';
+
+	protected function get_domain() {
+
+		return $this->get_settings( 'api', 'domain' ) ?? '';
+	}
+
+
+	protected function get_extra_rules() {
+
+		return $this->get_settings( 'api', 'extra_rules' ) ?? '';
 	}
 
 
 	protected function get_settings_rules(): array {
 
-		$settings = $this->get_settings();
-		$rules    = [];
+		$extra_rules = $this->get_extra_rules();
+		$rules       = [];
 
-		if ( ! empty( $settings['extraRules'] ) ) {
-			$rules = explode( "\n", $settings['extraRules'] );
+		if ( ! empty( $extra_rules ) ) {
+			$rules = explode( "\n", $extra_rules );
 
 			$rules = array_filter( $rules, function ( $line ) {
 

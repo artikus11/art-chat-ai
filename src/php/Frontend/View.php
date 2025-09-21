@@ -39,7 +39,7 @@ class View {
 			$this->main->get_templater()->get_template( 'public/chat.php' ),
 			true,
 			[
-				'options' => Helper::get_options(),
+				'options' => $this->main->get_settings()->get(),
 			]
 		);
 	}
@@ -61,7 +61,7 @@ class View {
 	 */
 	protected function is_show_chat(): bool {
 
-		$show_chat = Helper::get_option( 'appearance', 'show_chat' );
+		$show_chat = $this->main->get_settings()->get_option( 'general', 'show_chat' );
 
 		if ( ! $show_chat ) {
 			return false;

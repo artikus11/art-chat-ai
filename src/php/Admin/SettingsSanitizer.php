@@ -20,29 +20,46 @@ class SettingsSanitizer {
 
 		$sanitized = [];
 
-		foreach ( $defaults as $group => $group_defaults ) {
-			if ( ! isset( $input[ $group ] ) || ! is_array( $input[ $group ] ) ) {
-				$sanitized[ $group ] = $group_defaults;
+		foreach ( $schema['properties'] as $group => $groupSchema ) {
+			$sanitized[ $group ] = $this->sanitize_group(
+				$input[ $group ] ?? [],
+				$groupSchema['properties'] ?? [],
+				$defaults[ $group ] ?? []
+			);
+		}
+
+		return $sanitized;
+	}
+
+
+	/**
+	 * Рекурсивно санирует группу настроек.
+	 *
+	 * @param  array $input    Входные данные.
+	 * @param  array $schema   Схема группы.
+	 * @param  array $defaults Дефолтные значения группы.
+	 *
+	 * @return array
+	 */
+	private function sanitize_group( array $input, array $schema, array $defaults ): array {
+
+		$sanitized = [];
+
+		foreach ( $schema as $key => $fieldSchema ) {
+			$value = $input[ $key ] ?? $defaults[ $key ];
+
+			// Если это подгруппа (вложенная структура), рекурсивно санируем
+			if ( is_array( $fieldSchema ) && ! isset( $fieldSchema['type'] ) ) {
+				$sanitized[ $key ] = $this->sanitize_group(
+					$input[ $key ] ?? [],
+					$fieldSchema,
+					$defaults[ $key ] ?? []
+				);
+
 				continue;
 			}
 
-			$group_schema = $schema['properties'][ $group ]['properties'] ?? [];
-
-			if ( empty( $group_schema ) ) {
-				$sanitized[ $group ] = $group_defaults;
-				continue;
-			}
-
-			$sanitized[ $group ] = [];
-
-			foreach ( $group_defaults as $key => $default ) {
-				$value       = $input[ $group ][ $key ] ?? $default;
-				$fieldSchema = $group_schema[ $key ] ?? null;
-
-				$sanitized[ $group ][ $key ] = $fieldSchema
-					? $this->sanitize_field( $value, $fieldSchema, $default )
-					: $default;
-			}
+			$sanitized[ $key ] = $this->sanitize_field( $value, $fieldSchema, $defaults[ $key ] );
 		}
 
 		return $sanitized;

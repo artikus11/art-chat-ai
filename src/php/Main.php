@@ -19,7 +19,7 @@ class Main {
 	protected Templater $templater;
 
 
-	protected Helper $helper;
+	protected Settings $settings;
 
 
 	protected function __construct() {
@@ -33,10 +33,11 @@ class Main {
 
 		$this->utils     = new Utils();
 		$this->templater = new Templater();
-		$this->helper    = new Helper();
+		$this->settings  = new Settings( $this );
+		$this->settings->init_hooks();
 
 		( new Enqueue( $this ) )->init_hooks();
-		( new Settings( $this ) )->init_hooks();
+
 		( new View( $this ) )->init_hooks();
 	}
 
@@ -56,12 +57,6 @@ class Main {
 	}
 
 
-	public function get_helper(): Helper {
-
-		return $this->helper;
-	}
-
-
 	public function get_templater(): Templater {
 
 		return $this->templater;
@@ -71,5 +66,16 @@ class Main {
 	public function get_utils(): Utils {
 
 		return $this->utils;
+	}
+
+
+	/**
+	 * Получить настройки
+	 *
+	 * @return \Art\ChatAi\Admin\Settings
+	 */
+	public function get_settings(): Settings {
+
+		return $this->settings;
 	}
 }
