@@ -1,26 +1,18 @@
-﻿/*global acaiPublicSettings */
+﻿/*global acai_public_settings */
 import AIChat from '@artikus13/ai-chat-widget';
 import '@artikus13/ai-chat-widget/dist/chat.css';
 
 new AIChat(
 	{
 		apiOptions: {
-			url: acaiPublicSettings.urlApi,
-			domain: acaiPublicSettings.domainApi,
-			greeting: acaiPublicSettings.greetingApi
+			url: acai_public_settings.api.url,
+			domain: acai_public_settings.api.domain,
+			debug: acai_public_settings.general.debug
 		},
-		themeOptions: {
-			color: '#fff',
-			size: 'large'
-		},
-		selectorsOptions: {
-			container: '#chat-container',
-			selectors: { /* ... */ },
-			classes: { /* ... */ }
-		},
+		messagesOptions: acai_public_settings.messages,
 		delayOptions: {
-			greetDelay: 600,
-			followupDelay: 15000
+			chatShowDelay: acai_public_settings.general.chat_show_delay,      // Показ чата через 5 секунд после загрузки
+			toggleShowDelay: acai_public_settings.general.toggle_show_delay     // Кнопка-тумблер появляется через 1 секунду
 		}
 	}
 );

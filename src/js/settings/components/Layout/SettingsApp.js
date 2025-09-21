@@ -12,6 +12,7 @@ import SaveButton from '../Buttons/SaveButton';
 import SettingsTabPanel from '../Tabs/TabPanel';
 import SkeletonLoader from '../Skeleton/SkeletonLoader';
 import GlobalModal from './GlobalModal';
+import MessagesTab from '../Tabs/MessagesTab';
 
 const SettingsApp = observer( () => {
 	const { settingsStore, uiStore } = useStores();
@@ -34,6 +35,20 @@ const SettingsApp = observer( () => {
 						<>
 							{ tab.name === 'api' && (
 								<ApiTab
+									settings={ settings }
+									updateSetting={ settingsStore.updateSetting }
+								/>
+							) }
+							{ tab.name === 'messagesIn' && (
+								<MessagesTab
+									group="in"
+									settings={ settings }
+									updateSetting={ settingsStore.updateSetting }
+								/>
+							) }
+							{ tab.name === 'messagesOut' && (
+								<MessagesTab
+									group="out"
 									settings={ settings }
 									updateSetting={ settingsStore.updateSetting }
 								/>

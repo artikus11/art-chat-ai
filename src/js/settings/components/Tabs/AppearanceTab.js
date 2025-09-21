@@ -1,43 +1,28 @@
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../../stores/RootStoreContext';
-import { PanelBody } from '@wordpress/components';
-import SelectInput from '../Controls/SelectInput';
+import { Flex, FlexBlock, FlexItem, PanelBody } from '@wordpress/components';
 import ColorPickerInput from '../Controls/ColorPickerInput';
 import ToggleInput from '../Controls/ToggleInput';
 import TextInput from '../Controls/TextInput';
+import RangeInputDelay from '../Controls/RangeInputDelay';
 
 const AppearanceTab = observer( () => {
 	const { settingsStore } = useStores();
 	const { settings } = settingsStore;
+	const { appearance } = settings;
 
 	return (
 		<PanelBody title="Настройки внешнего вида" initialOpen={ true }>
-			{/*<SelectInput
-			 label="Расположение окна чата"
-			 value={ settings.chatPosition }
-			 onChange={ ( value ) => updateSetting( 'chatPosition', value ) }
-			 options={ [
-			 { label: 'Справа', value: 'right' },
-			 { label: 'Слева', value: 'left' },
-			 ] }
-			 />*/ }
-
-			<ToggleInput
-				label="Включить чат"
-				checked={ settings.showChat }
-				onChange={ ( value ) => settingsStore.updateSetting( 'showChat', value ) }
-			/>
-
 			<TextInput
 				label="Заголовок чата"
-				value={ settings.headerChatText || '' }
-				onChange={ ( value ) => settingsStore.updateSetting( 'headerChatText', value ) }
+				value={ appearance.header_chat_text || '' }
+				onChange={ ( value ) => settingsStore.updateSetting( 'appearance.header_chat_text', value ) }
 			/>
 
 			<ColorPickerInput
 				label="Акцентный цвет"
-				color={ settings.accentChatColor }
-				onChange={ ( color ) => settingsStore.updateSetting( 'accentChatColor', color ) }
+				color={ appearance.accent_chat_color }
+				onChange={ ( color ) => settingsStore.updateSetting( 'appearance.accent_chat_color', color ) }
 			/>
 		</PanelBody>
 	);

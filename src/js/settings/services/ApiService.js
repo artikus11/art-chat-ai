@@ -1,4 +1,4 @@
-/* global ChatbotSettings*/
+/* global acai_settings*/
 import apiFetch from '@wordpress/api-fetch';
 
 class ApiService {
@@ -7,7 +7,7 @@ class ApiService {
 		this.BASE_PATH = basePath;
 
 		if ( ! window.apiFetchInitialized ) {
-			apiFetch.use( apiFetch.createNonceMiddleware( ChatbotSettings.rest.nonce ) );
+			apiFetch.use( apiFetch.createNonceMiddleware( acai_settings.rest.nonce ) );
 			window.apiFetchInitialized = true;
 		}
 	}

@@ -8,6 +8,16 @@ const SettingsTabPanel = ( { activeKey, onSelect, children } ) => {
 			className: 'tab-api',
 		},
 		{
+			name: 'messagesIn',
+			title: 'Внутренние сообщния',
+			className: 'tab-messages',
+		},
+		{
+			name: 'messagesOut',
+			title: 'Внешние сообщения',
+			className: 'tab-messages',
+		},
+		{
 			name: 'appearance',
 			title: 'Внешний вид',
 			className: 'tab-appearance',
