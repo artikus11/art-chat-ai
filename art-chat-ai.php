@@ -5,7 +5,7 @@
  * Text Domain: art-chat-ai
  * Domain Path: /languages
  * Description: Плагин чата подбора товаров
- * Version: 1.2.2
+ * Version: 1.3.0
  * Author: Artem Abramovich
  * Author URI: https://wpruse.ru/
  * License: GPL-2.0+
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 const ACA_PLUGIN_DIR   = __DIR__;
 const ACA_PLUGIN_AFILE = __FILE__;
 
-const ACA_PLUGIN_VER    = '1.2.2';
+const ACA_PLUGIN_VER    = '1.3.0';
 const ACA_PLUGIN_NAME   = 'Art Chat Ai';
 const ACA_PLUGIN_SLUG   = 'art-chat-ai';
 const ACA_PLUGIN_PREFIX = 'acai';
