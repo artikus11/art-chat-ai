@@ -6,7 +6,7 @@ const ToggleInput = ( { label, checked, onChange } ) => (
 		label={ label }
 		checked={ checked }
 		onChange={ onChange }
-		className="acai-field"
+		className="acai-field acai-field--toggle"
 	/>
 
 );

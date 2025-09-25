@@ -9,13 +9,13 @@ const SettingsTabPanel = ( { activeKey, onSelect, children } ) => {
 		},
 		{
 			name: 'messagesIn',
-			title: 'Внутренние сообщния',
-			className: 'tab-messages',
+			title: 'Внутренние сообщения',
+			className: 'tab-messages-in',
 		},
 		{
 			name: 'messagesOut',
 			title: 'Внешние сообщения',
-			className: 'tab-messages',
+			className: 'tab-messages-out',
 		},
 		{
 			name: 'appearance',

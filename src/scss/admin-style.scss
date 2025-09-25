@@ -9,6 +9,7 @@
     &-row {
       display: flex;
       gap: media-mixin.rem(12);
+      align-items: center;
     }
 
     &-grid {
@@ -55,6 +56,10 @@
 
   &-field {
     margin-bottom: media-mixin.rem(16);
+
+    &--toggle{
+      margin-bottom: 0;
+    }
   }
 
   &-skeleton-wrapper {
