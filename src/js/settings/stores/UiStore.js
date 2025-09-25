@@ -9,6 +9,7 @@ class UiStore {
 		sync: false,
 		changeKey: false,
 		resetKey: false,
+		clearLocalStorage: false,
 	};
 	modal = {
 		isOpen: false,
@@ -38,6 +39,10 @@ class UiStore {
 
 	get isLoadingAdditionals() {
 		return this.loadingStates.fetchAdditionals;
+	}
+
+	get isLoadingClearLocalStorage() {
+		return this.loadingStates.clearLocalStorage;
 	}
 
 	get isSavingSettings() {
@@ -140,6 +145,41 @@ class UiStore {
 				onClose: null,
 			};
 		} );
+	}
+
+	clearLocalStorageByPrefix( prefix ) {
+		try {
+			if ( ! prefix || typeof prefix !== 'string' ) {
+				throw new Error( 'Префикс должен быть непустой строкой' );
+			}
+
+			const keysToRemove = [];
+			for ( let i = 0; i < localStorage.length; i++ ) {
+				const key = localStorage.key( i );
+				if ( key.startsWith( prefix ) ) {
+					keysToRemove.push( key );
+				}
+			}
+
+			keysToRemove.forEach( key => {
+				localStorage.removeItem( key );
+			} );
+
+			if ( keysToRemove.length === 0 ) {
+				this.showNotification( {
+					type: 'info',
+					message: 'Нет данных AI Chat в localStorage.',
+					duration: 3000,
+				} );
+				return;
+			}
+
+			this.showSuccess( `Удалено ${ keysToRemove.length } элемент${ keysToRemove.length === 1 ? '' : 'ов' } из localStorage.` );
+
+		} catch ( error ) {
+			console.error( '[UiStore] Ошибка при очистке localStorage:', error );
+			this.showError( `Не удалось очистить данные с префиксом "${ prefix }".` );
+		}
 	}
 
 	reset() {
