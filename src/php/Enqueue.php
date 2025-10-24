@@ -191,8 +191,8 @@ class Enqueue {
 			[ 'jquery' ],
 			$this->version,
 			[
-				'in_footer' => false,
-				//'strategy'  => 'defer',
+				'in_footer' => true,
+				'strategy'  => 'defer',
 			]
 		);
 
