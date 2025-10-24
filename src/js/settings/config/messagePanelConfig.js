@@ -83,7 +83,7 @@ export const MESSAGE_PANELS_CONFIG = {
 				} ),
 				createField( 'range', 'duration', 'Длительность отображения, мс', {
 					min: 0,
-					max: 10000,
+					max: 60000,
 					step: 500,
 				} ),
 				createField( 'range', 'cooldownHours', 'Интервал показа сообщения, часы', {
@@ -107,13 +107,13 @@ export const MESSAGE_PANELS_CONFIG = {
 				createField( 'text', 'text', 'Текст сообщения' ),
 				createField( 'range', 'delay', 'Задержка вывода, мс', {
 					min: 0,
-					max: 30000,
+					max: 90000,
 					step: 500,
 					initialPosition: 30000,
 				} ),
 				createField( 'range', 'duration', 'Длительность отображения, мс', {
 					min: 0,
-					max: 10000,
+					max: 60000,
 					step: 500,
 				} ),
 				createField( 'range', 'cooldownHours', 'Интервал показа сообщения, часы', {
@@ -137,13 +137,13 @@ export const MESSAGE_PANELS_CONFIG = {
 				createField( 'text', 'text', 'Текст сообщения' ),
 				createField( 'range', 'delay', 'Задержка вывода, мс', {
 					min: 0,
-					max: 10000,
+					max: 60000,
 					step: 500,
 					initialPosition: 10000,
 				} ),
 				createField( 'range', 'duration', 'Длительность отображения, мс', {
 					min: 0,
-					max: 10000,
+					max: 60000,
 					step: 500,
 				} ),
 				createField( 'range', 'cooldownHours', 'Интервал показа сообщения, часы', {
@@ -167,13 +167,13 @@ export const MESSAGE_PANELS_CONFIG = {
 				createField( 'text', 'text', 'Текст сообщения' ),
 				createField( 'range', 'delay', 'Задержка вывода, мс', {
 					min: 0,
-					max: 8000,
+					max: 60000,
 					step: 500,
 					initialPosition: 8000,
 				} ),
 				createField( 'range', 'duration', 'Длительность отображения, мс', {
 					min: 0,
-					max: 10000,
+					max: 60000,
 					step: 500,
 				} ),
 				createField( 'range', 'cooldownHours', 'Интервал показа сообщения, часы', {
@@ -197,13 +197,13 @@ export const MESSAGE_PANELS_CONFIG = {
 				createField( 'text', 'text', 'Текст сообщения' ),
 				createField( 'range', 'delay', 'Задержка вывода, мс', {
 					min: 0,
-					max: 5000,
+					max: 60000,
 					step: 500,
 					initialPosition: 5000,
 				} ),
 				createField( 'range', 'duration', 'Длительность отображения, мс', {
 					min: 0,
-					max: 7000,
+					max: 60000,
 					step: 500,
 				} ),
 				createField( 'range', 'cooldownHours', 'Интервал показа сообщения, часы', {
